@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,133 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model Person {
+  id             Int       @id @default(autoincrement())
+  name           String    @db.VarChar(100)
+  birth_year     String?   @db.VarChar(10)
+  eye_color      String?   @db.VarChar(30)
+  gender         String?   @db.VarChar(10)
+  hair_color     String?   @db.VarChar(30)
+  height         String?   @db.VarChar(10)
+  mass           String?   @db.VarChar(10)
+  skin_color     String?   @db.VarChar(30)
+  homeworld      String?   @db.VarChar(100)
+  films          PersonFilm[]
+  species        PersonSpecies[]
+  vehicles       PersonVehicle[]
+  starships      PersonStarship[]
+  url            String?   @db.VarChar(255)
+  created        DateTime
+  edited         DateTime
+}
+
+model Film {
+  id            Int       @id @default(autoincrement())
+  title         String    @db.VarChar(100)
+  episode_id    Int
+  opening_crawl String?   @db.Text
+  director      String?   @db.VarChar(100)
+  producer      String?   @db.VarChar(100)
+  release_date  DateTime
+  people        PersonFilm[]
+}
+
+model Starship {
+  id                   Int       @id @default(autoincrement())
+  name                 String    @db.VarChar(100)
+  model                String?   @db.VarChar(100)
+  starship_class       String?   @db.VarChar(100)
+  manufacturer         String?   @db.VarChar(100)
+  cost_in_credits      String?   @db.VarChar(20)
+  length               String?   @db.VarChar(20)
+  crew                 String?   @db.VarChar(20)
+  passengers           String?   @db.VarChar(20)
+  max_atmosphering_speed String? @db.VarChar(20)
+  hyperdrive_rating    String?   @db.VarChar(20)
+  MGLT                 String?   @db.VarChar(20)
+  cargo_capacity       String?   @db.VarChar(20)
+  consumables          String?   @db.VarChar(100)
+  people               PersonStarship[]
+}
+
+model Vehicle {
+  id                    Int       @id @default(autoincrement())
+  name                  String    @db.VarChar(100)
+  model                 String?   @db.VarChar(100)
+  vehicle_class         String?   @db.VarChar(50)
+  manufacturer          String?   @db.VarChar(100)
+  length                String?   @db.VarChar(20)
+  cost_in_credits       String?   @db.VarChar(20)
+  crew                  String?   @db.VarChar(20)
+  passengers            String?   @db.VarChar(20)
+  max_atmosphering_speed String? @db.VarChar(20)
+  cargo_capacity        String?   @db.VarChar(20)
+  consumables           String?   @db.VarChar(100)
+  people                PersonVehicle[]
+}
+
+model Species {
+  id                  Int       @id @default(autoincrement())
+  name                String    @db.VarChar(100)
+  classification      String?   @db.VarChar(50)
+  designation         String?   @db.VarChar(50)
+  average_height      String?   @db.VarChar(20)
+  average_lifespan    String?   @db.VarChar(20)
+  eye_colors          String?   @db.VarChar(100)
+  hair_colors         String?   @db.VarChar(100)
+  skin_colors         String?   @db.VarChar(100)
+  language            String?   @db.VarChar(100)
+  homeworld           String?   @db.VarChar(100)
+  people              PersonSpecies[]
+}
+
+model Planet {
+  id                   Int       @id @default(autoincrement())
+  name                 String    @db.VarChar(100)
+  diameter             String?   @db.VarChar(20)
+  rotation_period      String?   @db.VarChar(20)
+  orbital_period       String?   @db.VarChar(20)
+  gravity              String?   @db.VarChar(50)
+  population           String?   @db.VarChar(50)
+  climate              String?   @db.VarChar(50)
+  terrain              String?   @db.VarChar(100)
+  surface_water        String?   @db.VarChar(50)
+}
+
+model PersonFilm {
+  id        Int   @id @default(autoincrement())
+  personId  Int
+  filmId    Int
+
+  person    Person @relation(fields: [personId], references: [id])
+  film      Film   @relation(fields: [filmId], references: [id])
+}
+
+model PersonSpecies {
+  id        Int   @id @default(autoincrement())
+  personId  Int
+  speciesId Int
+
+  person    Person  @relation(fields: [personId], references: [id])
+  species   Species @relation(fields: [speciesId], references: [id])
+}
+
+model PersonVehicle {
+  id        Int   @id @default(autoincrement())
+  personId  Int
+  vehicleId Int
+
+  person    Person  @relation(fields: [personId], references: [id])
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+}
+
+model PersonStarship {
+  id         Int   @id @default(autoincrement())
+  personId   Int
+  starshipId Int
+
+  person     Person   @relation(fields: [personId], references: [id])
+  starship   Starship @relation(fields: [starshipId], references: [id])
 }
