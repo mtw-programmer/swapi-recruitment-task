@@ -8,130 +8,190 @@ datasource db {
 }
 
 model Person {
-  id             Int       @id @default(autoincrement())
-  name           String    @db.VarChar(100)
-  birth_year     String?   @db.VarChar(10)
-  eye_color      String?   @db.VarChar(30)
-  gender         String?   @db.VarChar(10)
-  hair_color     String?   @db.VarChar(30)
-  height         String?   @db.VarChar(10)
-  mass           String?   @db.VarChar(10)
-  skin_color     String?   @db.VarChar(30)
-  homeworld      String?   @db.VarChar(100)
-  films          PersonFilm[]
-  species        PersonSpecies[]
-  vehicles       PersonVehicle[]
-  starships      PersonStarship[]
-  url            String?   @db.VarChar(255)
-  created        DateTime
-  edited         DateTime
+  id          Int              @id @default(autoincrement())
+  name        String           @db.VarChar(100)
+  birth_year  String?          @db.VarChar(10)
+  eye_color   String?          @db.VarChar(30)
+  gender      String?          @db.VarChar(10)
+  hair_color  String?          @db.VarChar(30)
+  height      String?          @db.VarChar(10)
+  mass        String?          @db.VarChar(10)
+  skin_color  String?          @db.VarChar(30)
+  homeworld   Planet?          @relation(fields: [homeworldId], references: [id])
+  homeworldId Int?
+  films       PersonFilm[]
+  species     PersonSpecies[]
+  vehicles    PersonVehicle[]
+  starships   PersonStarship[]
+  url         String?          @db.VarChar(255)
+  created     DateTime
+  edited      DateTime
 }
 
 model Film {
-  id            Int       @id @default(autoincrement())
-  title         String    @db.VarChar(100)
+  id            Int            @id @default(autoincrement())
+  title         String         @db.VarChar(100)
   episode_id    Int
-  opening_crawl String?   @db.Text
-  director      String?   @db.VarChar(100)
-  producer      String?   @db.VarChar(100)
+  opening_crawl String?        @db.Text
+  director      String?        @db.VarChar(100)
+  producer      String?        @db.VarChar(100)
   release_date  DateTime
-  people        PersonFilm[]
+  species       FilmSpecies[]
+  starships     FilmStarship[]
+  vehicles      FilmVehicle[]
+  characters    PersonFilm[]
+  planets       FilmPlanet[]
+  url           String         @db.VarChar(255)
+  created       DateTime
+  edited        DateTime
 }
 
 model Starship {
-  id                   Int       @id @default(autoincrement())
-  name                 String    @db.VarChar(100)
-  model                String?   @db.VarChar(100)
-  starship_class       String?   @db.VarChar(100)
-  manufacturer         String?   @db.VarChar(100)
-  cost_in_credits      String?   @db.VarChar(20)
-  length               String?   @db.VarChar(20)
-  crew                 String?   @db.VarChar(20)
-  passengers           String?   @db.VarChar(20)
-  max_atmosphering_speed String? @db.VarChar(20)
-  hyperdrive_rating    String?   @db.VarChar(20)
-  MGLT                 String?   @db.VarChar(20)
-  cargo_capacity       String?   @db.VarChar(20)
-  consumables          String?   @db.VarChar(100)
-  people               PersonStarship[]
+  id                     Int              @id @default(autoincrement())
+  name                   String           @db.VarChar(100)
+  model                  String?          @db.VarChar(100)
+  starship_class         String?          @db.VarChar(100)
+  manufacturer           String?          @db.VarChar(100)
+  cost_in_credits        String?          @db.VarChar(20)
+  length                 String?          @db.VarChar(20)
+  crew                   String?          @db.VarChar(20)
+  passengers             String?          @db.VarChar(20)
+  max_atmosphering_speed String?          @db.VarChar(20)
+  hyperdrive_rating      String?          @db.VarChar(20)
+  MGLT                   String?          @db.VarChar(20)
+  cargo_capacity         String?          @db.VarChar(20)
+  consumables            String?          @db.VarChar(100)
+  films                  FilmStarship[]
+  people                 PersonStarship[]
 }
 
 model Vehicle {
-  id                    Int       @id @default(autoincrement())
-  name                  String    @db.VarChar(100)
-  model                 String?   @db.VarChar(100)
-  vehicle_class         String?   @db.VarChar(50)
-  manufacturer          String?   @db.VarChar(100)
-  length                String?   @db.VarChar(20)
-  cost_in_credits       String?   @db.VarChar(20)
-  crew                  String?   @db.VarChar(20)
-  passengers            String?   @db.VarChar(20)
-  max_atmosphering_speed String? @db.VarChar(20)
-  cargo_capacity        String?   @db.VarChar(20)
-  consumables           String?   @db.VarChar(100)
-  people                PersonVehicle[]
+  id                     Int             @id @default(autoincrement())
+  name                   String          @db.VarChar(100)
+  model                  String?         @db.VarChar(100)
+  vehicle_class          String?         @db.VarChar(50)
+  manufacturer           String?         @db.VarChar(100)
+  length                 String?         @db.VarChar(20)
+  cost_in_credits        String?         @db.VarChar(20)
+  crew                   String?         @db.VarChar(20)
+  passengers             String?         @db.VarChar(20)
+  max_atmosphering_speed String?         @db.VarChar(20)
+  cargo_capacity         String?         @db.VarChar(20)
+  consumables            String?         @db.VarChar(100)
+  films                  FilmVehicle[]
+  people                 PersonVehicle[]
+  url                    String          @db.VarChar(255)
+  created                DateTime
+  edited                 DateTime
 }
 
 model Species {
-  id                  Int       @id @default(autoincrement())
-  name                String    @db.VarChar(100)
-  classification      String?   @db.VarChar(50)
-  designation         String?   @db.VarChar(50)
-  average_height      String?   @db.VarChar(20)
-  average_lifespan    String?   @db.VarChar(20)
-  eye_colors          String?   @db.VarChar(100)
-  hair_colors         String?   @db.VarChar(100)
-  skin_colors         String?   @db.VarChar(100)
-  language            String?   @db.VarChar(100)
-  homeworld           String?   @db.VarChar(100)
-  people              PersonSpecies[]
+  id               Int             @id @default(autoincrement())
+  name             String          @db.VarChar(100)
+  classification   String?         @db.VarChar(50)
+  designation      String?         @db.VarChar(50)
+  average_height   String?         @db.VarChar(20)
+  average_lifespan String?         @db.VarChar(20)
+  eye_colors       String?         @db.VarChar(100)
+  hair_colors      String?         @db.VarChar(100)
+  skin_colors      String?         @db.VarChar(100)
+  language         String?         @db.VarChar(100)
+  homeworld        Planet?         @relation(fields: [homeworldId], references: [id])
+  homeworldId      Int?
+  films            FilmSpecies[]
+  people           PersonSpecies[]
+  url              String          @db.VarChar(255)
+  created          DateTime
+  edited           DateTime
 }
 
 model Planet {
-  id                   Int       @id @default(autoincrement())
-  name                 String    @db.VarChar(100)
-  diameter             String?   @db.VarChar(20)
-  rotation_period      String?   @db.VarChar(20)
-  orbital_period       String?   @db.VarChar(20)
-  gravity              String?   @db.VarChar(50)
-  population           String?   @db.VarChar(50)
-  climate              String?   @db.VarChar(50)
-  terrain              String?   @db.VarChar(100)
-  surface_water        String?   @db.VarChar(50)
+  id              Int          @id @default(autoincrement())
+  name            String       @db.VarChar(100)
+  diameter        String?      @db.VarChar(20)
+  rotation_period String?      @db.VarChar(20)
+  orbital_period  String?      @db.VarChar(20)
+  gravity         String?      @db.VarChar(50)
+  population      String?      @db.VarChar(50)
+  climate         String?      @db.VarChar(50)
+  terrain         String?      @db.VarChar(100)
+  surface_water   String?      @db.VarChar(50)
+  residents       Person[]
+  films           FilmPlanet[]
+  url             String       @db.VarChar(255)
+  created         DateTime
+  edited          DateTime
+  Species         Species[]
 }
 
 model PersonFilm {
-  id        Int   @id @default(autoincrement())
-  personId  Int
-  filmId    Int
+  id       Int @id @default(autoincrement())
+  personId Int
+  filmId   Int
 
-  person    Person @relation(fields: [personId], references: [id])
-  film      Film   @relation(fields: [filmId], references: [id])
+  person Person @relation(fields: [personId], references: [id])
+  film   Film   @relation(fields: [filmId], references: [id])
 }
 
 model PersonSpecies {
-  id        Int   @id @default(autoincrement())
+  id        Int @id @default(autoincrement())
   personId  Int
   speciesId Int
 
-  person    Person  @relation(fields: [personId], references: [id])
-  species   Species @relation(fields: [speciesId], references: [id])
+  person  Person  @relation(fields: [personId], references: [id])
+  species Species @relation(fields: [speciesId], references: [id])
 }
 
 model PersonVehicle {
-  id        Int   @id @default(autoincrement())
+  id        Int @id @default(autoincrement())
   personId  Int
   vehicleId Int
 
-  person    Person  @relation(fields: [personId], references: [id])
-  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+  person  Person  @relation(fields: [personId], references: [id])
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
 }
 
 model PersonStarship {
-  id         Int   @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
   personId   Int
   starshipId Int
 
-  person     Person   @relation(fields: [personId], references: [id])
-  starship   Starship @relation(fields: [starshipId], references: [id])
+  person   Person   @relation(fields: [personId], references: [id])
+  starship Starship @relation(fields: [starshipId], references: [id])
+}
+
+model FilmSpecies {
+  id        Int @id @default(autoincrement())
+  filmId    Int
+  speciesId Int
+
+  film    Film    @relation(fields: [filmId], references: [id])
+  species Species @relation(fields: [speciesId], references: [id])
+}
+
+model FilmStarship {
+  id         Int @id @default(autoincrement())
+  filmId     Int
+  starshipId Int
+
+  film     Film     @relation(fields: [filmId], references: [id])
+  starship Starship @relation(fields: [starshipId], references: [id])
+}
+
+model FilmVehicle {
+  id        Int @id @default(autoincrement())
+  filmId    Int
+  vehicleId Int
+
+  film    Film    @relation(fields: [filmId], references: [id])
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+}
+
+model FilmPlanet {
+  id       Int @id @default(autoincrement())
+  filmId   Int
+  planetId Int
+
+  film   Film   @relation(fields: [filmId], references: [id])
+  planet Planet @relation(fields: [planetId], references: [id])
 }
