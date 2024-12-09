@@ -19,8 +19,8 @@ export class FilmsService {
 
     async getFilmById(id: number) {
         try {
-            const films = await this.swapiUtils.fetchOne(`films/${id}`, this.toFetch);
-            return films;
+            const film = await this.swapiUtils.fetchOne(`films/${id}`, this.toFetch);
+            return film;
         } catch (error) {
             console.error(`getAllFilms: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
