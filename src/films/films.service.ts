@@ -1,18 +1,14 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import axios from 'axios';
+import { SwapiUtils } from 'src/common/utils/swapi.utils';
 
 @Injectable()
 export class FilmsService {
+    constructor(private readonly swapiUtils: SwapiUtils) {}
+
     async getAllFilms() {
         try {
-            const res = await axios.get('https://swapi.dev/api/films', { timeout: 5000 });
-
-            if (!res) {
-                console.error('getAllFilms: Could not get response from SWAPI service');
-                throw new InternalServerErrorException('Something went wrong. Please, try again later.');
-            }
-
-            return res.data;
+            const films = await this.swapiUtils.fetchAllData('films', ['characters', 'planets', 'species', 'starships', 'vehicles']);
+            return films;
         } catch (error) {
             console.error(`getAllFilms: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
