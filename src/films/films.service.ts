@@ -5,9 +5,21 @@ import { SwapiUtils } from 'src/common/utils/swapi.utils';
 export class FilmsService {
     constructor(private readonly swapiUtils: SwapiUtils) {}
 
+    private readonly toFetch = ['characters', 'planets', 'species', 'starships', 'vehicles'];
+
     async getAllFilms() {
         try {
-            const films = await this.swapiUtils.fetchAllData('films', ['characters', 'planets', 'species', 'starships', 'vehicles']);
+            const films = await this.swapiUtils.fetchAllData('films', this.toFetch);
+            return films;
+        } catch (error) {
+            console.error(`getAllFilms: ${error}`);
+            throw new InternalServerErrorException('Something went wrong! Please, try again later.');
+        }
+    }
+
+    async getFilmById(id: number) {
+        try {
+            const films = await this.swapiUtils.fetchOne(`films/${id}`, this.toFetch);
             return films;
         } catch (error) {
             console.error(`getAllFilms: ${error}`);

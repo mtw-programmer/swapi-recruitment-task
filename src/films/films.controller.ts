@@ -1,5 +1,5 @@
 import { FilmsService } from './films.service';
-import { Controller } from '@nestjs/common';
+import { Controller, Param } from '@nestjs/common';
 import { Get } from '@nestjs/common';
 
 @Controller('films')
@@ -9,6 +9,12 @@ export class FilmsController {
     @Get()
     async getAllFilms() {
         const result = await this.filmsService.getAllFilms();
+        return result;
+    }
+    
+    @Get(':id')
+    async getFilmById(@Param('id') id: number) {
+        const result = await this.filmsService.getFilmById(id);
         return result;
     }
 }

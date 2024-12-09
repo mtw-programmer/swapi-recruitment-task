@@ -32,7 +32,32 @@ export class SwapiUtils {
                 })
             );
 
-            return { films: processedData };
+            return { data: processedData };
+        } catch (error) {
+            console.error(`SWAPI Utils: ${error}`);
+            throw new Error(`SWAPI Utils: ${error}`);
+        }
+    }
+    
+    async fetchOne(subpage: string, toFetch: string[]): Promise<any> {
+        try {
+            const url = this.swapiBaseUrl + subpage;
+            const res = await axios.get(url, { timeout: this.swapiTimeout });
+
+            if (!res || !res.data) {
+                console.error(`SWAPI Utils: Could not fetch ${url}`);
+                throw new Error(`SWAPI Utils: Could not fetch ${url}`);
+            }
+
+            const updatedObj = { ...res.data };
+            
+            for (const property of toFetch) {
+                if (!Array.isArray(res.data[property]) || !res.data[property].length) continue;
+
+                updatedObj[property] = await this.fetchMultipleUrls(res.data[property]);
+            }
+
+            return { data: updatedObj };
         } catch (error) {
             console.error(`SWAPI Utils: ${error}`);
             throw new Error(`SWAPI Utils: ${error}`);
