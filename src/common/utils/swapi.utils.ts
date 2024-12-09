@@ -18,6 +18,8 @@ export class SwapiUtils {
 
             const data = res.data.results;
 
+            if (!toFetch.length) return { data };
+
             const processedData = await Promise.all(
                 data.map(async (obj) => {
                     const updatedObj = { ...obj };
@@ -48,6 +50,8 @@ export class SwapiUtils {
                 console.error(`SWAPI Utils: Could not fetch ${url}`);
                 throw new Error(`SWAPI Utils: Could not fetch ${url}`);
             }
+
+            if (!toFetch.length) return { data: res.data };
 
             const updatedObj = { ...res.data };
             
