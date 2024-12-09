@@ -22,7 +22,7 @@ export class FilmsService {
             const film = await this.swapiUtils.fetchOne(`films/${id}`, this.toFetch);
             return film;
         } catch (error) {
-            console.error(`getAllFilms: ${error}`);
+            console.error(`getFilmById: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }
