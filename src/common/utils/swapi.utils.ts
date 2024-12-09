@@ -16,6 +16,8 @@ export class SwapiUtils {
                 throw new Error(`SWAPI Utils: Could not fetch ${url}`);
             }
 
+            console.log(`SWAPI Utils: Successfully fetched ${url}`);
+
             const data = res.data.results;
 
             if (!toFetch.length) return { data };
@@ -50,6 +52,8 @@ export class SwapiUtils {
                 console.error(`SWAPI Utils: Could not fetch ${url}`);
                 throw new Error(`SWAPI Utils: Could not fetch ${url}`);
             }
+
+            console.log(`SWAPI Utils: Successfully fetched ${url}`);
 
             if (!toFetch.length) return { data: res.data };
 
