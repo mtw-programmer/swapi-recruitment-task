@@ -1,7 +1,7 @@
-import { FilmResponseDto } from './film.dto';
-import { PersonResponseDto } from './person.dto';
+import { FilmDto } from './film.dto';
+import { PersonDto } from './person.dto';
 
-export class StarshipResponseDto {
+export class StarshipDto {
     id: number;
     name: string;
     model?: string;
@@ -23,7 +23,7 @@ export class StarshipResponseDto {
     edited: Date;
 }
 
-export class StarshipResponseNestedDto {
+export class StarshipNestedDto {
     id: number;
     name: string;
     model?: string;
@@ -38,8 +38,8 @@ export class StarshipResponseNestedDto {
     MGLT?: string;
     cargo_capacity?: string;
     consumables?: string;
-    films?: FilmResponseDto[];
-    people?: PersonResponseDto[];
+    films?: FilmDto[];
+    people?: PersonDto[];
     url?: string;
     created: Date;
     edited: Date;

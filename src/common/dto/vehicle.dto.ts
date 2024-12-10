@@ -1,7 +1,7 @@
-import { FilmResponseDto } from './film.dto';
-import { PersonResponseDto } from './person.dto';
+import { FilmDto } from './film.dto';
+import { PersonDto } from './person.dto';
 
-export class VehicleResponseDto {
+export class VehicleDto {
     id: number;
     name: string;
     model?: string;
@@ -14,14 +14,14 @@ export class VehicleResponseDto {
     max_atmosphering_speed?: string;
     cargo_capacity?: string;
     consumables?: string;
-    films?: FilmResponseDto[];
-    people?: PersonResponseDto[];
+    films?: FilmDto[];
+    people?: PersonDto[];
     url?: string;
     created: Date;
     edited: Date;
   }
   
-export class VehicleResponseNestedDto {
+export class VehicleNestedDto {
     id: number;
     name: string;
     model?: string;
@@ -34,8 +34,8 @@ export class VehicleResponseNestedDto {
     max_atmosphering_speed?: string;
     cargo_capacity?: string;
     consumables?: string;
-    films?: FilmResponseDto[];
-    people?: PersonResponseDto[];
+    films?: FilmDto[];
+    people?: PersonDto[];
     url?: string;
     created: Date;
     edited: Date;

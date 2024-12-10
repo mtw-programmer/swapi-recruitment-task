@@ -1,10 +1,10 @@
-import { SpeciesResponseDto } from './species.dto';
-import { StarshipResponseDto } from './starship.dto';
-import { VehicleResponseDto } from './vehicle.dto';
-import { PersonResponseDto } from './person.dto';
-import { PlanetResponseDto } from './planet.dto';
+import { SpeciesDto } from './species.dto';
+import { StarshipDto } from './starship.dto';
+import { VehicleDto } from './vehicle.dto';
+import { PersonDto } from './person.dto';
+import { PlanetDto } from './planet.dto';
 
-export class FilmResponseDto {
+export class FilmDto {
     id: number;
     title: string;
     episode_id: number;
@@ -22,7 +22,7 @@ export class FilmResponseDto {
     edited: Date;
 }
 
-export class FilmResponseNestedDto {
+export class FilmNestedDto {
     id: number;
     title: string;
     episode_id: number;
@@ -30,11 +30,11 @@ export class FilmResponseNestedDto {
     director?: string;
     producer?: string;
     release_date: Date;
-    species?: SpeciesResponseDto[];
-    starships?: StarshipResponseDto[];
-    vehicles?: VehicleResponseDto[];
-    characters?: PersonResponseDto[];
-    planets?: PlanetResponseDto[];
+    species?: SpeciesDto[];
+    starships?: StarshipDto[];
+    vehicles?: VehicleDto[];
+    characters?: PersonDto[];
+    planets?: PlanetDto[];
     url: string;
     created: Date;
     edited: Date;

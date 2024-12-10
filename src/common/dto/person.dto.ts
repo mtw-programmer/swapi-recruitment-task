@@ -1,10 +1,10 @@
-import { FilmResponseDto } from './film.dto';
-import { PlanetResponseDto } from './planet.dto';
-import { SpeciesResponseDto } from './species.dto';
-import { VehicleResponseDto } from './vehicle.dto';
-import { StarshipResponseDto } from './starship.dto';
+import { FilmDto } from './film.dto';
+import { PlanetDto } from './planet.dto';
+import { SpeciesDto } from './species.dto';
+import { VehicleDto } from './vehicle.dto';
+import { StarshipDto } from './starship.dto';
 
-export class PersonResponseDto {
+export class PersonDto {
     id: number;
     name: string;
     birth_year?: string;
@@ -24,7 +24,7 @@ export class PersonResponseDto {
     edited: Date;
   }
 
-export class PersonResponseNestedDto {
+export class PersonNestedDto {
     id: number;
     name: string;
     birth_year?: string;
@@ -34,11 +34,11 @@ export class PersonResponseNestedDto {
     height?: string;
     mass?: string;
     skin_color?: string;
-    homeworld?: PlanetResponseDto;
-    films?: FilmResponseDto[];
-    species?: SpeciesResponseDto[];
-    vehicles?: VehicleResponseDto[];
-    starships?: StarshipResponseDto[];
+    homeworld?: PlanetDto;
+    films?: FilmDto[];
+    species?: SpeciesDto[];
+    vehicles?: VehicleDto[];
+    starships?: StarshipDto[];
     url?: string;
     created: Date;
     edited: Date;

@@ -1,7 +1,7 @@
-import { PersonResponseDto } from './person.dto';
-import { FilmResponseDto } from './film.dto';
+import { PersonDto } from './person.dto';
+import { FilmDto } from './film.dto';
 
-export class PlanetResponseDto {
+export class PlanetDto {
     id: number;
     name: string;
     diameter?: string;
@@ -19,7 +19,7 @@ export class PlanetResponseDto {
     edited: Date;
   }
 
-export class PlanetResponseNestedDto {
+export class PlanetNestedDto {
     id: number;
     name: string;
     diameter?: string;
@@ -30,8 +30,8 @@ export class PlanetResponseNestedDto {
     climate?: string;
     terrain?: string;
     surface_water?: string;
-    residents?: PersonResponseDto[];
-    films?: FilmResponseDto[];
+    residents?: PersonDto[];
+    films?: FilmDto[];
     url: string;
     created: Date;
     edited: Date;

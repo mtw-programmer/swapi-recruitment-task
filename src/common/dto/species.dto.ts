@@ -1,8 +1,8 @@
-import { PlanetResponseDto } from './planet.dto';
-import { PersonResponseDto } from './person.dto';
-import { FilmResponseDto } from './film.dto';
+import { PlanetDto } from './planet.dto';
+import { PersonDto } from './person.dto';
+import { FilmDto } from './film.dto';
 
-export class SpeciesResponseDto {
+export class SpeciesDto {
     id: number;
     name: string;
     classification?: string;
@@ -21,7 +21,7 @@ export class SpeciesResponseDto {
     edited: Date;
 }
   
-export class SpeciesResponseNestedDto {
+export class SpeciesNestedDto {
     id: number;
     name: string;
     classification?: string;
@@ -32,9 +32,9 @@ export class SpeciesResponseNestedDto {
     hair_colors?: string;
     skin_colors?: string;
     language?: string;
-    homeworld?: PlanetResponseDto;
-    people?: PersonResponseDto[];
-    films?: FilmResponseDto[];
+    homeworld?: PlanetDto;
+    people?: PersonDto[];
+    films?: FilmDto[];
     url: string;
     created: Date;
     edited: Date;
