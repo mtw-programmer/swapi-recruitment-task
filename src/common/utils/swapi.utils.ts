@@ -92,7 +92,7 @@ export class SwapiUtils {
         }
     }
 
-    async fetchMultipleUrls(urls: string[]): Promise<any[]> {
+    private async fetchMultipleUrls(urls: string[]): Promise<any[]> {
         try {
             if (!urls.length) {
                 console.error('SWAPI Utils: No URLs provided');
