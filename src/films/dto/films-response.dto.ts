@@ -1,4 +1,4 @@
 import { FilmDto, FilmNestedDto } from 'src/common/dto/film.dto';
 
-export type FilmsResponseDto = FilmDto[] | FilmNestedDto[] | [];
-export type FilmResponseDto = FilmDto | FilmNestedDto | [];
+export type FilmsResponseDto = { data: FilmDto[] } | { data: FilmNestedDto[] } | { data: [] };
+export type FilmResponseDto = { data: FilmDto } | { data: FilmNestedDto } | { data: [] };
