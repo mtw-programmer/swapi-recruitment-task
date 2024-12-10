@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
 import { FilmResponseDto, FilmsResponseDto } from './dto/films-response.dto';
+import { FilmDto } from 'src/common/dto/film.dto';
 
 @Injectable()
 export class FilmsService {
@@ -10,7 +11,7 @@ export class FilmsService {
 
     async getAllFilms(deep: boolean, filters): Promise<FilmsResponseDto> {
         try {
-            const films = await this.swapiUtils.fetchAllData('films', deep ? this.toFetch : []) as FilmsResponseDto;
+            const films = await this.swapiUtils.fetchAllData('films', deep ? this.toFetch : [], filters) as FilmsResponseDto;
             return films;
         } catch (error) {
             console.error(`getAllFilms: ${error}`);

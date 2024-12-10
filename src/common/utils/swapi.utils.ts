@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { FilmDto } from '../dto/film.dto';
 import axios from 'axios';
 
 @Injectable()
@@ -6,7 +7,7 @@ export class SwapiUtils {
     private readonly swapiBaseUrl = 'https://swapi.dev/api/';
     private readonly swapiTimeout = 60000;
 
-    async fetchAllData(subpage: string, toFetch: string[]): Promise<any> {
+    async fetchAllData(subpage: string, toFetch: string[], filters): Promise<any> {
         try {
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
@@ -18,11 +19,23 @@ export class SwapiUtils {
 
             console.log(`SWAPI Utils: Successfully fetched ${url}`);
 
-            const data = res.data.results;
+            let data: FilmDto[] = res.data.results;
+
+            if (filters) {
+                for (const [key, property] of Object.entries(filters)) {
+                    data = data.filter(
+                        (film: FilmDto) => {
+                            const filmProperty = film[key as keyof typeof film];
+                            if (!filmProperty) return true;
+                            return filmProperty.toString().toLowerCase().includes(property.toString().toLowerCase());
+                        }
+                    );
+                }
+            }
 
             if (!toFetch.length) return { data };
 
-            const processedData = await Promise.all(
+            let processedData = await Promise.all(
                 data.map(async (obj) => {
                     const updatedObj = { ...obj };
 
