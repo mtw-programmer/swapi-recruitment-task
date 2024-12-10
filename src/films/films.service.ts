@@ -1,7 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
 import { FilmResponseDto, FilmsResponseDto } from './dto/films-response.dto';
-import { FilmDto } from 'src/common/dto/film.dto';
 
 @Injectable()
 export class FilmsService {

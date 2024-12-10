@@ -7,7 +7,7 @@ export class SwapiUtils {
     private readonly swapiBaseUrl = 'https://swapi.dev/api/';
     private readonly swapiTimeout = 60000;
 
-    async fetchAllData(subpage: string, toFetch: string[], filters): Promise<any> {
+    async fetchAllData(subpage: string, toFetch: string[], filters): Promise<{ data: any[] }> {
         try {
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
@@ -27,6 +27,13 @@ export class SwapiUtils {
                         (film: FilmDto) => {
                             const filmProperty = film[key as keyof typeof film];
                             if (!filmProperty) return true;
+
+                            if (Array.isArray(property)) {
+                                return property.some((param) =>
+                                    filmProperty.toString().toLowerCase().includes(param.toString().toLowerCase()),
+                                );
+                            }
+
                             return filmProperty.toString().toLowerCase().includes(property.toString().toLowerCase());
                         }
                     );
@@ -56,7 +63,7 @@ export class SwapiUtils {
         }
     }
     
-    async fetchOne(subpage: string, toFetch: string[]): Promise<any> {
+    async fetchOne(subpage: string, toFetch: string[]): Promise<{ data: any }> {
         try {
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
