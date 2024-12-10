@@ -6,8 +6,9 @@ import axios from 'axios';
 export class SwapiUtils {
     private readonly swapiBaseUrl = 'https://swapi.dev/api/';
     private readonly swapiTimeout = 60000;
+    private readonly limitPerPage = 5;
 
-    async fetchAllData(subpage: string, toFetch: string[], filters): Promise<{ data: any[] }> {
+    async fetchAllData(subpage: string, toFetch: string[], filters: Record<string, any>): Promise<{ data: any[] }> {
         try {
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
@@ -20,13 +21,14 @@ export class SwapiUtils {
             console.log(`SWAPI Utils: Successfully fetched ${url}`);
 
             let data: FilmDto[] = res.data.results;
+            const page = parseInt(filters.page);
 
             if (filters) {
                 for (const [key, property] of Object.entries(filters)) {
                     data = data.filter(
                         (film: FilmDto) => {
                             const filmProperty = film[key as keyof typeof film];
-                            if (!filmProperty) return true;
+                            if (!filmProperty || key == 'page') return true;
 
                             if (Array.isArray(property)) {
                                 return property.some((param) =>
@@ -38,6 +40,16 @@ export class SwapiUtils {
                         }
                     );
                 }
+            }
+
+            if (filters.page &&
+                typeof page == 'number' &&
+                !isNaN(page) &&
+                page > 0
+            ) {
+                const startIndex = (filters.page - 1) * this.limitPerPage;
+                const endIndex = startIndex + this.limitPerPage;
+                data = data.slice(startIndex, endIndex);
             }
 
             if (!toFetch.length) return { data };
