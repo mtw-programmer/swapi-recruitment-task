@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { FilmDto } from '../dto/film.dto';
 import axios from 'axios';
 
@@ -75,14 +75,13 @@ export class SwapiUtils {
         }
     }
     
-    async fetchOne(subpage: string, toFetch: string[]): Promise<{ data: any }> {
+    async fetchOne(subpage: string, toFetch: string[]): Promise<any> {
         try {
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
 
             if (!res || !res.data) {
-                console.error(`SWAPI Utils: Could not fetch ${url}`);
-                throw new Error(`SWAPI Utils: Could not fetch ${url}`);
+                throw new NotFoundException('Could not find the object with the given ID!');
             }
 
             console.log(`SWAPI Utils: Successfully fetched ${url}`);
@@ -99,8 +98,18 @@ export class SwapiUtils {
 
             return { data: updatedObj };
         } catch (error) {
-            console.error(`SWAPI Utils: ${error}`);
-            throw new Error(`SWAPI Utils: ${error}`);
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 404) {
+                    console.error(`SWAPI Utils: Could not find the url ${this.swapiBaseUrl + subpage}`);
+                    throw new NotFoundException('Could not find the object with the given ID!');
+                }
+
+                console.error(`SWAPI Utils: Axios Error Response -`, error.response?.data);
+                return { error: error.response?.status || 500, msg: 'An unexpected error occurred.' };
+            } else {
+                console.error(`SWAPI Utils: ${error}`);
+                throw new Error(`SWAPI Utils: ${error}`);
+            }
         }
     }
 
