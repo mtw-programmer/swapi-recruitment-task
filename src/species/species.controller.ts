@@ -3,6 +3,7 @@ import { Get } from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { SpeciesService } from './species.service';
 import { OneSpeciesResponseDto, SpeciesResponseDto } from './dto/species-response.dto';
+import { OneSpeciesDocsResponses, SpeciesDocsQueries, SpeciesDocsResponses } from './species.docs';
 
 @Controller('species')
 export class SpeciesController {
@@ -10,6 +11,8 @@ export class SpeciesController {
 
     @Get()
     @ApiOperation({ summary: 'Get all species. Records filtered with query params are being seached with "include" and are no case-sensitive.' })
+    @SpeciesDocsQueries()
+    @SpeciesDocsResponses()
     async getAllSpecies(
         @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
@@ -27,6 +30,8 @@ export class SpeciesController {
         type: Boolean,
         description: 'Allows you to get data with first-level nested properties'
     })
+    @SpeciesDocsQueries()
+    @OneSpeciesDocsResponses()
     async getSpeciesById(
         @Param('id') id: number,
         @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false
