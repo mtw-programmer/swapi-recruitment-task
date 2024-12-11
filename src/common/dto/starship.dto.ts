@@ -16,7 +16,7 @@ export class StarshipDto {
     cargo_capacity?: string;
     consumables?: string;
     films?: string[];
-    people?: string[];
+    pilots?: string[];
     url?: string;
     created: Date;
     edited: Date;
@@ -37,7 +37,7 @@ export class StarshipNestedDto {
     cargo_capacity?: string;
     consumables?: string;
     films?: FilmDto[];
-    people?: PersonDto[];
+    pilots?: PersonDto[];
     url?: string;
     created: Date;
     edited: Date;

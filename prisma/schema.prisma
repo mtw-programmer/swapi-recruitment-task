@@ -62,7 +62,7 @@ model Starship {
   cargo_capacity         String?          @db.VarChar(20)
   consumables            String?          @db.VarChar(100)
   films                  FilmStarship[]
-  people                 PersonStarship[]
+  pilots                 PersonStarship[]
 }
 
 model Vehicle {
