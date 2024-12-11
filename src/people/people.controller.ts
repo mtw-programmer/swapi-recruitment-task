@@ -23,7 +23,13 @@ export class PeopleController {
     
     @Get(':id')
     @ApiOperation({ summary: 'Get person with the given id.' })
-    @PeopleDocsQueries()
+    @ApiQuery({
+        name: 'deep',
+        required: false,
+        default: false,
+        type: Boolean,
+        description: 'Allows you to get data with first-level nested properties'
+    })
     @PersonDocsResponses()
     async getPersonById(
         @Param('id') id: number,
