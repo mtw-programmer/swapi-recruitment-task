@@ -8,7 +8,7 @@ export class FilmsService {
 
     private readonly toFetch = ['characters', 'planets', 'species', 'starships', 'vehicles'];
 
-    async getAllFilms(deep: boolean, filters): Promise<FilmsResponseDto> {
+    async getAllFilms(deep: boolean, filters: Record<string, any>): Promise<FilmsResponseDto> {
         try {
             const films = await this.swapiUtils.fetchAllData('films', deep ? this.toFetch : [], filters) as FilmsResponseDto;
             return films;
