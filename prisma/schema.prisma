@@ -79,7 +79,7 @@ model Vehicle {
   cargo_capacity         String?         @db.VarChar(20)
   consumables            String?         @db.VarChar(100)
   films                  FilmVehicle[]
-  people                 PersonVehicle[]
+  pilots                 PersonVehicle[]
   url                    String          @db.VarChar(255)
   created                DateTime
   edited                 DateTime
