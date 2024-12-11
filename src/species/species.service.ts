@@ -6,7 +6,7 @@ import { SpeciesResponseDto, OneSpeciesResponseDto } from './dto/species-respons
 export class SpeciesService {
     constructor(private readonly swapiUtils: SwapiUtils) {}
 
-    private readonly toFetch = ['characters', 'planets', 'species', 'starships', 'vehicles'];
+    private readonly toFetch = ['homeworld', 'people', 'films'];
 
     async getAllSpecies(deep: boolean, filters: Record<string, any>): Promise<SpeciesResponseDto> {
         try {
