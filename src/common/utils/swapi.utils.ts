@@ -26,16 +26,16 @@ export class SwapiUtils {
                 for (const [key, property] of Object.entries(filters)) {
                     data = data.filter(
                         (obj) => {
-                            const filmProperty = obj[key as keyof typeof obj];
-                            if (!filmProperty || key == 'page') return true;
+                            const objectProperty = obj[key as keyof typeof obj];
+                            if (!objectProperty || key == 'page' || key == 'deep') return true;
 
                             if (Array.isArray(property)) {
                                 return property.some((param) =>
-                                    filmProperty.toString().toLowerCase().includes(param.toString().toLowerCase()),
+                                    objectProperty.toString().toLowerCase().includes(param.toString().toLowerCase()),
                                 );
                             }
 
-                            return filmProperty.toString().toLowerCase().includes(property.toString().toLowerCase());
+                            return objectProperty.toString().toLowerCase().includes(property.toString().toLowerCase());
                         }
                     );
                 }
@@ -58,7 +58,8 @@ export class SwapiUtils {
                     const updatedObj = { ...obj };
 
                     for (const property of toFetch) {
-                        if (typeof obj[property] === 'string' && obj[property].startsWith(this.swapiBaseUrl))
+                        if (property == 'deep') continue;
+                        else if (typeof obj[property] === 'string' && obj[property].startsWith(this.swapiBaseUrl))
                             updatedObj[property] = (await this.fetchMultipleUrls([obj[property]]))[0];
                         else if (Array.isArray(obj[property]))
                             updatedObj[property] = await this.fetchMultipleUrls(obj[property]);
