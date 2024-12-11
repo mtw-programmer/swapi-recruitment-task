@@ -3,6 +3,7 @@ import { Controller, Param, ParseBoolPipe, Query } from '@nestjs/common';
 import { Get } from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { StarshipResponseDto, StarshipsResponseDto } from './dto/startships-response.dto';
+import { StarshipDocsResponses, StarshipsDocsQueries, StarshipsDocsResponses } from './starships.docs';
 
 @Controller('starships')
 export class StarshipsController {
@@ -10,6 +11,8 @@ export class StarshipsController {
 
     @Get()
     @ApiOperation({ summary: 'Get all starships. Records filtered with query params are being seached with "include" and are no case-sensitive.' })
+    @StarshipsDocsQueries()
+    @StarshipsDocsResponses()
     async getAllStarships(
         @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
@@ -27,6 +30,7 @@ export class StarshipsController {
         type: Boolean,
         description: 'Allows you to get data with first-level nested properties'
     })
+    @StarshipDocsResponses()
     async getStarshipById(
         @Param('id') id: number,
         @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false
