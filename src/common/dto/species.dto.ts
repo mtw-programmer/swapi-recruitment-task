@@ -3,7 +3,6 @@ import { PersonDto } from './person.dto';
 import { FilmDto } from './film.dto';
 
 export class SpeciesDto {
-    id: number;
     name: string;
     classification?: string;
     designation?: string;
@@ -22,7 +21,6 @@ export class SpeciesDto {
 }
   
 export class SpeciesNestedDto {
-    id: number;
     name: string;
     classification?: string;
     designation?: string;

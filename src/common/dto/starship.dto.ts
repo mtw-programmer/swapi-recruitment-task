@@ -2,7 +2,6 @@ import { FilmDto } from './film.dto';
 import { PersonDto } from './person.dto';
 
 export class StarshipDto {
-    id: number;
     name: string;
     model?: string;
     starship_class?: string;
@@ -24,7 +23,6 @@ export class StarshipDto {
 }
 
 export class StarshipNestedDto {
-    id: number;
     name: string;
     model?: string;
     starship_class?: string;

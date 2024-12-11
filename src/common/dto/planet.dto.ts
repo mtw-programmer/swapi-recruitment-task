@@ -2,7 +2,6 @@ import { PersonDto } from './person.dto';
 import { FilmDto } from './film.dto';
 
 export class PlanetDto {
-    id: number;
     name: string;
     diameter?: string;
     rotation_period?: string;
@@ -20,7 +19,6 @@ export class PlanetDto {
   }
 
 export class PlanetNestedDto {
-    id: number;
     name: string;
     diameter?: string;
     rotation_period?: string;

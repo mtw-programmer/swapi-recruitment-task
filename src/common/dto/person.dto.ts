@@ -5,7 +5,6 @@ import { VehicleDto } from './vehicle.dto';
 import { StarshipDto } from './starship.dto';
 
 export class PersonDto {
-    id: number;
     name: string;
     birth_year?: string;
     eye_color?: string;
@@ -25,7 +24,6 @@ export class PersonDto {
   }
 
 export class PersonNestedDto {
-    id: number;
     name: string;
     birth_year?: string;
     eye_color?: string;

@@ -2,7 +2,6 @@ import { FilmDto } from './film.dto';
 import { PersonDto } from './person.dto';
 
 export class VehicleDto {
-    id: number;
     name: string;
     model?: string;
     vehicle_class?: string;
@@ -22,7 +21,6 @@ export class VehicleDto {
   }
   
 export class VehicleNestedDto {
-    id: number;
     name: string;
     model?: string;
     vehicle_class?: string;
