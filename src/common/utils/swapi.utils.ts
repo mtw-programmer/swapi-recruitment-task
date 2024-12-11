@@ -123,7 +123,7 @@ export class SwapiUtils {
         try {
             if (!urls.length) {
                 console.error('SWAPI Utils: No URLs provided');
-                throw new Error('SWAPI Utils: No URLs provided');
+                return [];
             }
 
             if (!Array.isArray(urls)) {
