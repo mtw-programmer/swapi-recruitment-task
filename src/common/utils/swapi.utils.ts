@@ -26,8 +26,8 @@ export class SwapiUtils {
             if (filters) {
                 for (const [key, property] of Object.entries(filters)) {
                     data = data.filter(
-                        (film: FilmDto) => {
-                            const filmProperty = film[key as keyof typeof film];
+                        (obj) => {
+                            const filmProperty = obj[key as keyof typeof obj];
                             if (!filmProperty || key == 'page') return true;
 
                             if (Array.isArray(property)) {
@@ -52,16 +52,19 @@ export class SwapiUtils {
                 data = data.slice(startIndex, endIndex);
             }
 
-            if (!toFetch.length) return { data };
+            if (!toFetch || !toFetch?.length) return { data };
 
             let processedData = await Promise.all(
                 data.map(async (obj) => {
                     const updatedObj = { ...obj };
 
                     for (const property of toFetch) {
-                        if (!Array.isArray(obj[property]) || !obj[property].length) continue;
-
-                        updatedObj[property] = await this.fetchMultipleUrls(obj[property]);
+                        if (typeof obj[property] === 'string' && obj[property].startsWith(this.swapiBaseUrl))
+                            updatedObj[property] = (await this.fetchMultipleUrls([obj[property]]))[0];
+                        else if (Array.isArray(obj[property]))
+                            updatedObj[property] = await this.fetchMultipleUrls(obj[property]);
+                        else
+                            continue;
                     }
 
                     return updatedObj;
@@ -86,14 +89,17 @@ export class SwapiUtils {
 
             console.log(`SWAPI Utils: Successfully fetched ${url}`);
 
-            if (!toFetch.length) return { data: res.data };
+            if (!toFetch || !toFetch?.length) return { data: res.data };
 
             const updatedObj = { ...res.data };
             
             for (const property of toFetch) {
-                if (!Array.isArray(res.data[property]) || !res.data[property].length) continue;
-
-                updatedObj[property] = await this.fetchMultipleUrls(res.data[property]);
+                if (typeof res.data[property] === 'string')
+                    updatedObj[property] = (await this.fetchMultipleUrls([res.data[property]]))[0];
+                else if (Array.isArray(res.data[property]))
+                    updatedObj[property] = await this.fetchMultipleUrls(res.data[property]);
+                else
+                    continue;
             }
 
             return { data: updatedObj };
@@ -119,6 +125,11 @@ export class SwapiUtils {
                 console.error('SWAPI Utils: No URLs provided');
                 throw new Error('SWAPI Utils: No URLs provided');
             }
+
+            if (!Array.isArray(urls)) {
+                console.error('SWAPI Utils: Provided URLs are not an array');
+                throw new Error('SWAPI Utils: Invalid input, expected an array of URLs');
+            }            
 
             const validUrls = urls.filter((url: string) => url.startsWith(this.swapiBaseUrl));
             if (validUrls.length !== urls.length) {
