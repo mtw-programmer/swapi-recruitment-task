@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FilmDto } from '../dto/film.dto';
 import axios from 'axios';
 
 @Injectable()
@@ -20,7 +19,7 @@ export class SwapiUtils {
 
             console.log(`SWAPI Utils: Successfully fetched ${url}`);
 
-            let data: FilmDto[] = res.data.results;
+            let data = res.data.results;
             const page = parseInt(filters.page);
 
             if (filters) {
