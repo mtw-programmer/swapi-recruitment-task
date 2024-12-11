@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
 import { FilmResponseDto, FilmsResponseDto } from './dto/films-response.dto';
 
@@ -23,6 +23,9 @@ export class FilmsService {
             const film = await this.swapiUtils.fetchOne(`films/${id}`, deep ? this.toFetch : []) as FilmResponseDto;
             return film;
         } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
             console.error(`getFilmById: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
