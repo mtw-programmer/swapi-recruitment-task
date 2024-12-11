@@ -10,8 +10,7 @@ export class FilmsService {
 
     async getAllFilms(deep: boolean, filters: Record<string, any>): Promise<FilmsResponseDto> {
         try {
-            const films = await this.swapiUtils.fetchAllData('films', deep ? this.toFetch : [], filters) as FilmsResponseDto;
-            return films;
+            return await this.swapiUtils.fetchAllData('films', deep ? this.toFetch : [], filters) as FilmsResponseDto;
         } catch (error) {
             console.error(`getAllFilms: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
@@ -20,8 +19,7 @@ export class FilmsService {
 
     async getFilmById(id: number, deep: boolean): Promise<FilmResponseDto> {
         try {
-            const film = await this.swapiUtils.fetchOne(`films/${id}`, deep ? this.toFetch : []) as FilmResponseDto;
-            return film;
+            return await this.swapiUtils.fetchOne(`films/${id}`, deep ? this.toFetch : []) as FilmResponseDto;
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;

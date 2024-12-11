@@ -9,8 +9,7 @@ export class PeopleService {
 
     async getAllPeople(deep: boolean, filters: Record<string, any>): Promise<any> {
         try {
-            const films = await this.swapiUtils.fetchAllData('people', deep ? this.toFetch : [], filters) as any;
-            return films;
+            return await this.swapiUtils.fetchAllData('people', deep ? this.toFetch : [], filters) as any;
         } catch (error) {
             console.error(`getAllPeople: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
@@ -19,8 +18,7 @@ export class PeopleService {
 
     async getPersonById(id: number, deep: boolean): Promise<any> {
         try {
-            const film = await this.swapiUtils.fetchOne(`people/${id}`, deep ? this.toFetch : []) as any;
-            return film;
+            return await this.swapiUtils.fetchOne(`people/${id}`, deep ? this.toFetch : []) as any;
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;
