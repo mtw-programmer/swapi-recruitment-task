@@ -1,23 +1,25 @@
+import { FilmDto } from 'src/common/dto/film.dto';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
 import { Injectable } from '@nestjs/common';
 import { NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { PairResults } from './interfaces/PairResults';
 
 @Injectable()
 export class OpeningCrawlService {
     constructor(private readonly swapiUtils: SwapiUtils) {}
 
-    private words = [];
-    private names = [];
+    private words = [] as string[];
+    private names = [] as string[];
 
     private async fetchOpeningCrawls() {
         try {
             const films = await this.swapiUtils.fetchAllData('films', [], {});
             if (!films.data || !films.data.length) {
                 console.log('fetchOpeningCrawls: Could not fetch any films data');
-                return [];
+                return;
             }
 
-            const { data } = films;
+            const { data } = films as { data: FilmDto[] };
 
             let openingCrawls = '';
 
@@ -28,7 +30,7 @@ export class OpeningCrawlService {
             openingCrawls = openingCrawls.replace(/[.,-?!&;:]/g, '');
             const words = openingCrawls.split(/\s+|\n|\r|\r\n/).filter((word: string) => word !== '');
 
-            if (!words.length) return [];
+            if (!words.length) return;
 
             this.words = words;
         } catch (error) {
@@ -42,11 +44,11 @@ export class OpeningCrawlService {
 
     private async fetchAllNames() {
         try {
-            if (!this.words || !this.words.length) return [];
+            if (!this.words || !this.words.length) return;
 
             const people = await this.swapiUtils.fetchAllData('people', [], {});
 
-            if (!people.data || !people.data.length) return [];
+            if (!people.data || !people.data.length) return;
 
             const { data } = people;
             const names = [];
@@ -61,16 +63,16 @@ export class OpeningCrawlService {
             if (error instanceof NotFoundException) {
                 throw error;
             }
-            console.error(`mostFrequentName: ${error}`);
+            console.error(`fetchAllNames: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }
 
-    private async pairResults(): Promise<any> {
+    private async pairResults(): Promise<PairResults | []> {
         try {
             if (!this.words || !this.words.length) return [];
 
-            const uniquePars = {};
+            const uniquePars = {} as number;
             const nameCount = {} as number;
             
             for (let i = 1; i <= this.words.length; i++) {
@@ -98,7 +100,7 @@ export class OpeningCrawlService {
             if (error instanceof NotFoundException) {
                 throw error;
             }
-            console.error(`pairUniqueWords: ${error}`);
+            console.error(`pairResults: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }
