@@ -8,6 +8,6 @@ export class OpeningCrawlController {
 
     @Get()
     async getUniqueWords() {
-        return await this.openingCrawlService.pairUniqueWords();
+        return await this.openingCrawlService.getWordsData();
     }
 }
