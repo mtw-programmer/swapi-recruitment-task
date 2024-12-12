@@ -13,7 +13,7 @@ export class OpeningCrawlService {
 
     private async fetchOpeningCrawls() {
         try {
-            const films = await this.swapiUtils.fetchAllData('films', [], {});
+            const films = await this.swapiUtils.fetchAllData('films', {});
 
             if (!films.data || !films.data.length) {
                 console.log('fetchOpeningCrawls: Could not fetch any films data');
@@ -44,7 +44,7 @@ export class OpeningCrawlService {
         try {
             if (!this.words || !this.words.length) return;
 
-            const people = await this.swapiUtils.fetchAllData('people', [], {});
+            const people = await this.swapiUtils.fetchAllData('people', {});
 
             if (!people.data || !people.data.length) return;
 

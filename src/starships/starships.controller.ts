@@ -14,10 +14,9 @@ export class StarshipsController {
     @StarshipsDocsQueries()
     @StarshipsDocsResponses()
     async getAllStarships(
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
     ):Promise<StarshipsResponseDto> {
-        const result = await this.starshipsService.getAllStarships(!!deep, filters);
+        const result = await this.starshipsService.getAllStarships(filters);
         return result;
     }
     
@@ -33,7 +32,7 @@ export class StarshipsController {
     @StarshipDocsResponses()
     async getStarshipById(
         @Param('id') id: number,
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false
+        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean
     ):Promise<StarshipResponseDto> {
         const result = await this.starshipsService.getStarshipById(id, !!deep);
         return result;

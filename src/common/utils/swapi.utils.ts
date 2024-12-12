@@ -6,9 +6,22 @@ export class SwapiUtils {
     private readonly swapiBaseUrl = 'https://swapi.dev/api/';
     private readonly swapiTimeout = 60000;
     private readonly limitPerPage = 5;
+    private readonly toFetch = {
+        'films': ['characters', 'planets', 'species', 'starships', 'vehicles'],
+        'people': ['homeworld', 'films', 'species', 'vehicles', 'starships'],
+        'planets': ['residents', 'films'],
+        'species': ['homeworld', 'people', 'films'],
+        'starships': ['films', 'pilots'],
+        'vehicles': ['films', 'pilots']
+    };
 
-    async fetchAllData(subpage: string, toFetch: string[], filters: Record<string, any>): Promise<{ data: any[] }> {
+    async fetchAllData(subpage: string, filters: Record<string, any>): Promise<{ data: any[] }> {
         try {
+            if (!Array.isArray(this.toFetch[subpage]) || !this.toFetch[subpage].length) {
+                console.error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
+                throw new Error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
+            }
+
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
 
@@ -22,7 +35,7 @@ export class SwapiUtils {
             let data = res.data.results;
             const page = parseInt(filters.page);
 
-            if (filters) {
+            if (filters && typeof filters === 'object') {
                 for (const [key, property] of Object.entries(filters)) {
                     data = data.filter(
                         (obj) => {
@@ -51,13 +64,13 @@ export class SwapiUtils {
                 data = data.slice(startIndex, endIndex);
             }
 
-            if (!toFetch || !toFetch?.length) return { data };
+            if (!this.toFetch[subpage] || !this.toFetch[subpage]?.length || !filters.deep) return { data };
 
             let processedData = await Promise.all(
                 data.map(async (obj) => {
                     const updatedObj = { ...obj };
 
-                    for (const property of toFetch) {
+                    for (const property of this.toFetch[subpage]) {
                         if (property == 'deep') continue;
                         else if (typeof obj[property] === 'string' && obj[property].startsWith(this.swapiBaseUrl))
                             updatedObj[property] = (await this.fetchMultipleUrls([obj[property]]))[0];
@@ -78,7 +91,7 @@ export class SwapiUtils {
         }
     }
     
-    async fetchOne(subpage: string, toFetch: string[]): Promise<any> {
+    async fetchOne(subpage: string, deep: boolean): Promise<any> {
         try {
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
@@ -89,11 +102,13 @@ export class SwapiUtils {
 
             console.log(`SWAPI Utils: Successfully fetched ${url}`);
 
-            if (!toFetch || !toFetch?.length) return { data: res.data };
+            const subpageType = subpage.split('/')[0];
+
+            if (!Array.isArray(this.toFetch[subpageType]) || !this.toFetch[subpageType]?.length || !deep) return { data: res.data };
 
             const updatedObj = { ...res.data };
-            
-            for (const property of toFetch) {
+
+            for (const property of this.toFetch[subpageType]) {
                 if (typeof res.data[property] === 'string')
                     updatedObj[property] = (await this.fetchMultipleUrls([res.data[property]]))[0];
                 else if (Array.isArray(res.data[property]))

@@ -6,11 +6,9 @@ import { StarshipResponseDto, StarshipsResponseDto } from './dto/startships-resp
 export class StarshipsService {
     constructor(private readonly swapiUtils: SwapiUtils) {}
 
-    private readonly toFetch = ['films', 'pilots'];
-
-    async getAllStarships(deep: boolean, filters: Record<string, any>): Promise<StarshipsResponseDto> {
+    async getAllStarships(filters: Record<string, any>): Promise<StarshipsResponseDto> {
         try {
-            return await this.swapiUtils.fetchAllData('starships', deep ? this.toFetch : [], filters) as StarshipsResponseDto;
+            return await this.swapiUtils.fetchAllData('starships', filters) as StarshipsResponseDto;
         } catch (error) {
             console.error(`getAllStarships: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
@@ -19,7 +17,7 @@ export class StarshipsService {
 
     async getStarshipById(id: number, deep: boolean): Promise<StarshipResponseDto> {
         try {
-            return await this.swapiUtils.fetchOne(`starships/${id}`, deep ? this.toFetch : []) as StarshipResponseDto;
+            return await this.swapiUtils.fetchOne(`starships/${id}`, deep) as StarshipResponseDto;
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;

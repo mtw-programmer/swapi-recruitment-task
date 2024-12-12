@@ -6,11 +6,9 @@ import { SpeciesResponseDto, OneSpeciesResponseDto } from './dto/species-respons
 export class SpeciesService {
     constructor(private readonly swapiUtils: SwapiUtils) {}
 
-    private readonly toFetch = ['homeworld', 'people', 'films'];
-
-    async getAllSpecies(deep: boolean, filters: Record<string, any>): Promise<SpeciesResponseDto> {
+    async getAllSpecies(filters: Record<string, any>): Promise<SpeciesResponseDto> {
         try {
-            const species = await this.swapiUtils.fetchAllData('species', deep ? this.toFetch : [], filters) as SpeciesResponseDto;
+            const species = await this.swapiUtils.fetchAllData('species', filters) as SpeciesResponseDto;
             return species;
         } catch (error) {
             console.error(`getAllSpecies: ${error}`);
@@ -20,7 +18,7 @@ export class SpeciesService {
 
     async getSpeciesById(id: number, deep: boolean): Promise<OneSpeciesResponseDto> {
         try {
-            const species = await this.swapiUtils.fetchOne(`species/${id}`, deep ? this.toFetch : []) as OneSpeciesResponseDto;
+            const species = await this.swapiUtils.fetchOne(`species/${id}`, deep) as OneSpeciesResponseDto;
             return species;
         } catch (error) {
             if (error instanceof NotFoundException) {

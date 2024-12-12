@@ -14,10 +14,9 @@ export class VehiclesController {
     @VehiclesDocsQueries()
     @VehiclesDocsResponses()
     async getAllVehicles(
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
     ):Promise<VehiclesResponseDto> {
-        const result = await this.vehiclesService.getAllVehicles(!!deep, filters);
+        const result = await this.vehiclesService.getAllVehicles(filters);
         return result;
     }
     
@@ -33,7 +32,7 @@ export class VehiclesController {
     @VehicleDocsResponses()
     async getVehicleById(
         @Param('id') id: number,
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false
+        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean
     ):Promise<VehicleResponseDto> {
         const result = await this.vehiclesService.getVehicleById(id, !!deep);
         return result;
