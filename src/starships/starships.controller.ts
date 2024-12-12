@@ -32,7 +32,7 @@ export class StarshipsController {
     @StarshipDocsResponses()
     async getStarshipById(
         @Param('id') id: number,
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean
+        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false
     ):Promise<StarshipResponseDto> {
         const result = await this.starshipsService.getStarshipById(id, !!deep);
         return result;
