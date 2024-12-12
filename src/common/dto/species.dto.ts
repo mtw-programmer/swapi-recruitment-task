@@ -31,13 +31,13 @@ export class SpeciesNestedDto {
     @ApiProperty({ type: String, required: false })
     language?: string;
 
-    @ApiProperty({ type: PlanetDto, required: false })
+    @ApiProperty({ type: () => PlanetDto, required: false })
     homeworld?: PlanetDto;
 
-    @ApiProperty({ type: [PersonDto], required: false })
+    @ApiProperty({ type: () => [PersonDto], required: false })
     people?: PersonDto[];
 
-    @ApiProperty({ type: [FilmDto], required: false })
+    @ApiProperty({ type: () => [FilmDto], required: false })
     films?: FilmDto[];
 
     @ApiProperty({ type: String })
@@ -133,7 +133,7 @@ export class SpeciesDto {
     homeworld?: string;
   
     @ApiProperty({
-      type: [String],
+      type: () => [String],
       description: 'array -- An array of People URL Resources that are a part of this species.',
       example: ['https://swapi.dev/api/people/1/', 'https://swapi.dev/api/people/2/'],
       required: false,
@@ -141,7 +141,7 @@ export class SpeciesDto {
     people?: string[];
   
     @ApiProperty({
-      type: [String],
+      type: () => [String],
       description: 'array -- An array of Film URL Resources that this species has appeared in.',
       example: ['https://swapi.dev/api/films/1/', 'https://swapi.dev/api/films/2/'],
       required: false,

@@ -24,19 +24,19 @@ export class FilmNestedDto {
     @ApiProperty({ type: Date })
     release_date: Date;
 
-    @ApiProperty({ type: [SpeciesDto], required: false })
+    @ApiProperty({ type: () => [SpeciesDto], required: false })
     species?: SpeciesDto[];
 
-    @ApiProperty({ type: [StarshipDto], required: false })
+    @ApiProperty({ type: () => [StarshipDto], required: false })
     starships?: StarshipDto[];
 
-    @ApiProperty({ type: [VehicleDto], required: false })
+    @ApiProperty({ type: () => [VehicleDto], required: false })
     vehicles?: VehicleDto[];
 
-    @ApiProperty({ type: [PersonDto], required: false })
+    @ApiProperty({ type: () => [PersonDto], required: false })
     characters?: PersonDto[];
 
-    @ApiProperty({ type: [PlanetDto], required: false })
+    @ApiProperty({ type: () => [PlanetDto], required: false })
     planets?: PlanetDto[];
 
     @ApiProperty({ type: String })
@@ -75,19 +75,19 @@ export class FilmDto {
     @ApiProperty({ type: Date, description: 'date -- The ISO 8601 date format of film release at original creator country.', example: '1977-05-25' })
     release_date: Date;
 
-    @ApiProperty({ type: [String], required: false, description: 'array -- An array of species resource URLs that are in this film.' })
+    @ApiProperty({ type: () => [String], required: false, description: 'array -- An array of species resource URLs that are in this film.' })
     species?: string[];
 
-    @ApiProperty({ type: [String], required: false, description: 'array -- An array of starship resource URLs that are in this film.' })
+    @ApiProperty({ type: () => [String], required: false, description: 'array -- An array of starship resource URLs that are in this film.' })
     starships?: string[];
 
-    @ApiProperty({ type: [String], required: false, description: 'array -- An array of vehicle resource URLs that are in this film.' })
+    @ApiProperty({ type: () => [String], required: false, description: 'array -- An array of vehicle resource URLs that are in this film.' })
     vehicles?: string[];
 
-    @ApiProperty({ type: [String], required: false, description: 'array -- An array of people resource URLs that are in this film.' })
+    @ApiProperty({ type: () => [String], required: false, description: 'array -- An array of people resource URLs that are in this film.' })
     characters?: string[];
 
-    @ApiProperty({ type: [String], required: false, description: 'array -- An array of planet resource URLs that are in this film.' })
+    @ApiProperty({ type: () => [String], required: false, description: 'array -- An array of planet resource URLs that are in this film.' })
     planets?: string[];
 
     @ApiProperty({ type: String, description: 'string -- the hypermedia URL of this resource.', example: 'https://swapi.dev/api/films/1/' })

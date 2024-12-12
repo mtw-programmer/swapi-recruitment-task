@@ -81,13 +81,13 @@ export class StarshipNestedDto {
     consumables?: string;
 
     @ApiProperty({
-        type: [FilmDto],
+        type: () => [FilmDto],
         required: false,
     })
     films?: FilmDto[];
 
     @ApiProperty({
-        type: [PersonDto],
+        type: () => [PersonDto],
         required: false,
     })
     pilots?: PersonDto[];
@@ -215,7 +215,7 @@ export class StarshipDto {
   consumables?: string;
 
   @ApiProperty({
-    type: [String],
+    type: () => [String],
     description: 'array -- An array of Film URL Resources that this starship has appeared in.',
     example: ['https://swapi.dev/api/films/1/'],
     required: false,
@@ -223,7 +223,7 @@ export class StarshipDto {
   films?: string[];
 
   @ApiProperty({
-    type: [String],
+    type: () => [String],
     description: 'array -- An array of People URL Resources that this starship has been piloted by.',
     example: [],
     required: false,

@@ -4,7 +4,7 @@ import { InternalErrorSchema, NotFoundErrorSchema } from 'src/common/docs/error-
 import { PersonDto } from 'src/common/dto/person.dto';
 
 class PeopleResponseDto {
-    @ApiProperty({ type: [PersonDto], description: 'The data object containing the people (without nesting)' })
+    @ApiProperty({ type: () => [PersonDto], description: 'The data object containing the people (without nesting)' })
     data: PersonDto[];
 }
 
@@ -15,22 +15,22 @@ class PersonResponseDto {
 
 export function PeopleDocsQueries() {
   return applyDecorators(
-    ApiQuery({ name: 'name', required: false, type: [String] }),
-    ApiQuery({ name: 'birth_year', required: false, type: [String] }),
-    ApiQuery({ name: 'eye_color', required: false, type: [String] }),
-    ApiQuery({ name: 'gender', required: false, type: [String] }),
-    ApiQuery({ name: 'hair_color', required: false, type: [String] }),
-    ApiQuery({ name: 'height', required: false, type: [String] }),
-    ApiQuery({ name: 'mass', required: false, type: [String] }),
-    ApiQuery({ name: 'skin_color', required: false, type: [String] }),
-    ApiQuery({ name: 'homeworld', required: false, type: [String] }),
-    ApiQuery({ name: 'films', required: false, type: [String] }),
-    ApiQuery({ name: 'species', required: false, type: [String] }),
-    ApiQuery({ name: 'vehicles', required: false, type: [String] }),
-    ApiQuery({ name: 'starships', required: false, type: [String] }),
-    ApiQuery({ name: 'url', required: false, type: [String] }),
-    ApiQuery({ name: 'created', required: false, type: [String] }),
-    ApiQuery({ name: 'edited', required: false, type: [String] }),
+    ApiQuery({ name: 'name', required: false, type: () => [String] }),
+    ApiQuery({ name: 'birth_year', required: false, type: () => [String] }),
+    ApiQuery({ name: 'eye_color', required: false, type: () => [String] }),
+    ApiQuery({ name: 'gender', required: false, type: () => [String] }),
+    ApiQuery({ name: 'hair_color', required: false, type: () => [String] }),
+    ApiQuery({ name: 'height', required: false, type: () => [String] }),
+    ApiQuery({ name: 'mass', required: false, type: () => [String] }),
+    ApiQuery({ name: 'skin_color', required: false, type: () => [String] }),
+    ApiQuery({ name: 'homeworld', required: false, type: () => [String] }),
+    ApiQuery({ name: 'films', required: false, type: () => [String] }),
+    ApiQuery({ name: 'species', required: false, type: () => [String] }),
+    ApiQuery({ name: 'vehicles', required: false, type: () => [String] }),
+    ApiQuery({ name: 'starships', required: false, type: () => [String] }),
+    ApiQuery({ name: 'url', required: false, type: () => [String] }),
+    ApiQuery({ name: 'created', required: false, type: () => [String] }),
+    ApiQuery({ name: 'edited', required: false, type: () => [String] }),
     ApiQuery({
         name: 'deep',
         required: false,

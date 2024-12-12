@@ -4,7 +4,7 @@ import { InternalErrorSchema, NotFoundErrorSchema } from 'src/common/docs/error-
 import { StarshipDto } from 'src/common/dto/starship.dto';
 
 class StarshipsResponseDto {
-    @ApiProperty({ type: [StarshipDto], description: 'The data object containing the starships (without nesting)' })
+    @ApiProperty({ type: () => [StarshipDto], description: 'The data object containing the starships (without nesting)' })
     data: StarshipDto[];
 }
 
@@ -15,24 +15,24 @@ class StarshipResponseDto {
 
 export function StarshipsDocsQueries() {
   return applyDecorators(
-    ApiQuery({ name: 'name', required: false, type: [String] }),
-    ApiQuery({ name: 'model', required: false, type: [String] }),
-    ApiQuery({ name: 'starship_class', required: false, type: [String] }),
-    ApiQuery({ name: 'manufacturer', required: false, type: [String] }),
-    ApiQuery({ name: 'cost_in_credits', required: false, type: [String] }),
-    ApiQuery({ name: 'length', required: false, type: [String] }),
-    ApiQuery({ name: 'crew', required: false, type: [String] }),
-    ApiQuery({ name: 'passengers', required: false, type: [String] }),
-    ApiQuery({ name: 'max_atmosphering_speed', required: false, type: [String] }),
-    ApiQuery({ name: 'hyperdrive_rating', required: false, type: [String] }),
-    ApiQuery({ name: 'MGLT', required: false, type: [String] }),
-    ApiQuery({ name: 'cargo_capacity', required: false, type: [String] }),
-    ApiQuery({ name: 'consumables', required: false, type: [String] }),
-    ApiQuery({ name: 'films', required: false, type: [String] }),
-    ApiQuery({ name: 'pilots', required: false, type: [String] }),
-    ApiQuery({ name: 'url', required: false, type: [String] }),
-    ApiQuery({ name: 'created', required: false, type: [String] }),
-    ApiQuery({ name: 'edited', required: false, type: [String] }),
+    ApiQuery({ name: 'name', required: false, type: () => [String] }),
+    ApiQuery({ name: 'model', required: false, type: () => [String] }),
+    ApiQuery({ name: 'starship_class', required: false, type: () => [String] }),
+    ApiQuery({ name: 'manufacturer', required: false, type: () => [String] }),
+    ApiQuery({ name: 'cost_in_credits', required: false, type: () => [String] }),
+    ApiQuery({ name: 'length', required: false, type: () => [String] }),
+    ApiQuery({ name: 'crew', required: false, type: () => [String] }),
+    ApiQuery({ name: 'passengers', required: false, type: () => [String] }),
+    ApiQuery({ name: 'max_atmosphering_speed', required: false, type: () => [String] }),
+    ApiQuery({ name: 'hyperdrive_rating', required: false, type: () => [String] }),
+    ApiQuery({ name: 'MGLT', required: false, type: () => [String] }),
+    ApiQuery({ name: 'cargo_capacity', required: false, type: () => [String] }),
+    ApiQuery({ name: 'consumables', required: false, type: () => [String] }),
+    ApiQuery({ name: 'films', required: false, type: () => [String] }),
+    ApiQuery({ name: 'pilots', required: false, type: () => [String] }),
+    ApiQuery({ name: 'url', required: false, type: () => [String] }),
+    ApiQuery({ name: 'created', required: false, type: () => [String] }),
+    ApiQuery({ name: 'edited', required: false, type: () => [String] }),
     ApiQuery({
         name: 'deep',
         required: false,

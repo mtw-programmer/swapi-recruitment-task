@@ -4,7 +4,7 @@ import { FilmDto } from 'src/common/dto/film.dto';
 import { InternalErrorSchema, NotFoundErrorSchema } from 'src/common/docs/error-msg.docs';
 
 class FilmsResponseDto {
-    @ApiProperty({ type: [FilmDto], description: 'The data object containing the films (without nesting)' })
+    @ApiProperty({ type: () => [FilmDto], description: 'The data object containing the films (without nesting)' })
     data: FilmDto[];
 }
 
@@ -15,20 +15,20 @@ class FilmResponseDto {
 
 export function FilmDocsQueries() {
   return applyDecorators(
-    ApiQuery({ name: 'title', required: false, type: [String] }),
-    ApiQuery({ name: 'episode_id', required: false, type: [Number] }),
-    ApiQuery({ name: 'opening_crawl', required: false, type: [String] }),
-    ApiQuery({ name: 'director', required: false, type: [String] }),
-    ApiQuery({ name: 'producer', required: false, type: [String] }),
-    ApiQuery({ name: 'release_date', required: false, type: [String] }),
-    ApiQuery({ name: 'species', required: false, type: [String] }),
-    ApiQuery({ name: 'starships', required: false, type: [String] }),
-    ApiQuery({ name: 'vehicles', required: false, type: [String] }),
-    ApiQuery({ name: 'characters', required: false, type: [String] }),
-    ApiQuery({ name: 'planets', required: false, type: [String] }),
-    ApiQuery({ name: 'url', required: false, type: [String] }),
-    ApiQuery({ name: 'created', required: false, type: [String] }),
-    ApiQuery({ name: 'edited', required: false, type: [String] }),
+    ApiQuery({ name: 'title', required: false, type: () => [String] }),
+    ApiQuery({ name: 'episode_id', required: false, type: () => [Number] }),
+    ApiQuery({ name: 'opening_crawl', required: false, type: () => [String] }),
+    ApiQuery({ name: 'director', required: false, type: () => [String] }),
+    ApiQuery({ name: 'producer', required: false, type: () => [String] }),
+    ApiQuery({ name: 'release_date', required: false, type: () => [String] }),
+    ApiQuery({ name: 'species', required: false, type: () => [String] }),
+    ApiQuery({ name: 'starships', required: false, type: () => [String] }),
+    ApiQuery({ name: 'vehicles', required: false, type: () => [String] }),
+    ApiQuery({ name: 'characters', required: false, type: () => [String] }),
+    ApiQuery({ name: 'planets', required: false, type: () => [String] }),
+    ApiQuery({ name: 'url', required: false, type: () => [String] }),
+    ApiQuery({ name: 'created', required: false, type: () => [String] }),
+    ApiQuery({ name: 'edited', required: false, type: () => [String] }),
     ApiQuery({
         name: 'deep',
         required: false,

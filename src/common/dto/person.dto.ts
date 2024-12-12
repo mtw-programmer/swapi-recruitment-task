@@ -30,19 +30,19 @@ export class PersonNestedDto {
   @ApiProperty({ type: String, required: false })
   skin_color?: string;
 
-  @ApiProperty({ type: PlanetDto, required: false })
+  @ApiProperty({ type: () => PlanetDto, required: false })
   homeworld?: PlanetDto;
 
-  @ApiProperty({ type: [FilmDto], required: false })
+  @ApiProperty({ type: () => [FilmDto], required: false })
   films?: FilmDto[];
 
-  @ApiProperty({ type: [SpeciesDto], required: false })
+  @ApiProperty({ type: () => [SpeciesDto], required: false })
   species?: SpeciesDto[];
 
-  @ApiProperty({ type: [VehicleDto], required: false })
+  @ApiProperty({ type: () => [VehicleDto], required: false })
   vehicles?: VehicleDto[];
 
-  @ApiProperty({ type: [StarshipDto], required: false })
+  @ApiProperty({ type: () => [StarshipDto], required: false })
   starships?: StarshipDto[];
 
   @ApiProperty({ type: String, required: false })
@@ -121,7 +121,7 @@ export class PersonDto {
   homeworld?: string;
 
   @ApiProperty({
-      type: [String],
+      type: () => [String],
       description: 'array -- An array of film resource URLs that this person has been in.',
       example: [
           'https://swapi.dev/api/films/1/',
@@ -131,7 +131,7 @@ export class PersonDto {
   films?: string[];
 
   @ApiProperty({
-      type: [String],
+      type: () => [String],
       description: 'array -- An array of species resource URLs that this person belongs to.',
       example: [
           'https://swapi.dev/api/species/1/'
@@ -140,7 +140,7 @@ export class PersonDto {
   species?: string[];
 
   @ApiProperty({
-      type: [String],
+      type: () => [String],
       description: 'array -- An array of starship resource URLs that this person has piloted.',
       example: [
           'https://swapi.dev/api/starships/12/',
@@ -150,7 +150,7 @@ export class PersonDto {
   starships?: string[];
 
   @ApiProperty({
-      type: [String],
+      type: () => [String],
       description: 'array -- An array of vehicle resource URLs that this person has piloted.',
       example: [
           'https://swapi.dev/api/vehicles/14/'
