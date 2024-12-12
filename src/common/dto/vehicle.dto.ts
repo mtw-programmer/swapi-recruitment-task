@@ -69,13 +69,13 @@ export class VehicleNestedDto {
   consumables?: string;
 
   @ApiProperty({
-    type: [FilmDto],
+    type: () => [FilmDto],
     required: false,
   })
   films?: FilmDto[];
 
   @ApiProperty({
-    type: [PersonDto],
+    type: () => [PersonDto],
     required: false,
   })
   pilots?: PersonDto[];
@@ -187,7 +187,7 @@ export class VehicleDto {
   consumables?: string;
 
   @ApiProperty({
-    type: [String],
+    type: () => [String],
     description: 'array -- An array of Film URL Resources that this vehicle has appeared in.',
     example: ['https://swapi.dev/api/films/1/'],
     required: false,
@@ -195,7 +195,7 @@ export class VehicleDto {
   films?: string[];
 
   @ApiProperty({
-    type: [String],
+    type: () => [String],
     description: 'array -- An array of Pilot URL Resources who have piloted this vehicle.',
     example: [],
     required: false,
