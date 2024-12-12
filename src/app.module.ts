@@ -5,9 +5,10 @@ import { SpeciesModule } from './species/species.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
 import { StarshipsModule } from './starships/starships.module';
 import { PlanetsModule } from './planets/planets.module';
+import { OpeningCrawlModule } from './opening_crawl/opening_crawl.module';
 
 @Module({
-  imports: [FilmsModule, PeopleModule, SpeciesModule, VehiclesModule, StarshipsModule, PlanetsModule],
+  imports: [FilmsModule, PeopleModule, SpeciesModule, VehiclesModule, StarshipsModule, PlanetsModule, OpeningCrawlModule],
   controllers: [],
   providers: [],
 })
