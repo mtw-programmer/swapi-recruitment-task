@@ -3,5 +3,5 @@ export interface PairResults {
     mostFrequentNames: {
         name: string | string[],
         count: number,
-    },
+    } | {},
 }
