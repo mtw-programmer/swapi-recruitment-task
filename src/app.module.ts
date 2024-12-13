@@ -8,8 +8,7 @@ import { PlanetsModule } from './planets/planets.module';
 import { OpeningCrawlModule } from './opening_crawl/opening_crawl.module';
 import { PrismaService } from './prisma/prisma.service';
 
-@Module({
-  imports: [FilmsModule, PeopleModule, SpeciesModule, VehiclesModule, StarshipsModule, PlanetsModule, OpeningCrawlModule],
+@Module({imports: [FilmsModule, PeopleModule, SpeciesModule, VehiclesModule, StarshipsModule, PlanetsModule, OpeningCrawlModule],
   controllers: [],
   providers: [PrismaService],
 })

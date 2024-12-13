@@ -6,8 +6,6 @@ import { VehicleResponseDto, VehiclesResponseDto } from './dto/vehicles-response
 export class VehiclesService {
     constructor(private readonly swapiUtils: SwapiUtils) {}
 
-    private readonly toFetch = ['films', 'pilots'];
-
     async getAllVehicles(filters: Record<string, any>): Promise<any> {
         try {
             return await this.swapiUtils.fetchAllData('vehicles', filters) as VehiclesResponseDto;

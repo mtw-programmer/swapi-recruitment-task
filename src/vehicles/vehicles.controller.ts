@@ -32,7 +32,7 @@ export class VehiclesController {
     @VehicleDocsResponses()
     async getVehicleById(
         @Param('id') id: number,
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean
+        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false
     ):Promise<VehicleResponseDto> {
         const result = await this.vehiclesService.getVehicleById(id, !!deep);
         return result;

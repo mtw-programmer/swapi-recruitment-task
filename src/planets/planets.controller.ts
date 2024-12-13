@@ -32,7 +32,7 @@ export class PlanetsController {
     @PlanetByIdDocsResponses()
     async getPlanetById(
         @Param('id') id: number,
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean
+        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false
     ):Promise<PlanetResponseDto> {
         const result = await this.planetsService.getPlanetById(id, !!deep);
         return result;

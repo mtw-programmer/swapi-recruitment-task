@@ -1,8 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { CacheUtils } from './cache.utils';
+import { Injectable, NotFoundException, Module } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
+@Module({
+    imports: [CacheUtils],
+    providers: [SwapiUtils],
+    exports: [SwapiUtils],
+  })
 export class SwapiUtils {
+    constructor(private readonly cacheUtils: CacheUtils) {}
+
     private readonly swapiBaseUrl = 'https://swapi.dev/api/';
     private readonly swapiTimeout = 60000;
     private readonly limitPerPage = 5;
@@ -21,6 +29,11 @@ export class SwapiUtils {
                 console.error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
                 throw new Error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
             }
+
+            const cachedValue = await this.cacheUtils.checkRecordInCache(subpage);
+
+            if (cachedValue)
+                return { data: cachedValue };
 
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });

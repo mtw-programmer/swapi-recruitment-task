@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
+import { CacheUtils } from 'src/common/utils/cache.utils';
 import { SpeciesResponseDto, OneSpeciesResponseDto } from './dto/species-response.dto';
 
 @Injectable()

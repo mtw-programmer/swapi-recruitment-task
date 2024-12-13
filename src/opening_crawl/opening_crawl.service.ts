@@ -1,5 +1,6 @@
 import { FilmDto } from 'src/common/dto/film.dto';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
+import { CacheUtils } from 'src/common/utils/cache.utils';
 import { Injectable } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
 import { PairResults } from './interfaces/PairResults';

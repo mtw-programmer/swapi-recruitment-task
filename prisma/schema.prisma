@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -7,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Person {
+model people {
   id          Int              @id @default(autoincrement())
   name        String           @db.VarChar(100)
   birth_year  String?          @db.VarChar(10)
@@ -17,7 +18,7 @@ model Person {
   height      String?          @db.VarChar(10)
   mass        String?          @db.VarChar(10)
   skin_color  String?          @db.VarChar(30)
-  homeworld   Planet?          @relation(fields: [homeworldId], references: [id])
+  homeworld   planets?         @relation(fields: [homeworldId], references: [id])
   homeworldId Int?
   films       PersonFilm[]
   species     PersonSpecies[]
@@ -26,9 +27,10 @@ model Person {
   url         String?          @db.VarChar(255)
   created     DateTime
   edited      DateTime
+  cache_date  DateTime         @default(now())
 }
 
-model Film {
+model films {
   id            Int            @id @default(autoincrement())
   title         String         @db.VarChar(100)
   episode_id    Int
@@ -44,9 +46,10 @@ model Film {
   url           String         @db.VarChar(255)
   created       DateTime
   edited        DateTime
+  cache_date    DateTime       @default(now())
 }
 
-model Starship {
+model starships {
   id                     Int              @id @default(autoincrement())
   name                   String           @db.VarChar(100)
   model                  String?          @db.VarChar(100)
@@ -63,9 +66,10 @@ model Starship {
   consumables            String?          @db.VarChar(100)
   films                  FilmStarship[]
   pilots                 PersonStarship[]
+  cache_date             DateTime         @default(now())
 }
 
-model Vehicle {
+model vehicles {
   id                     Int             @id @default(autoincrement())
   name                   String          @db.VarChar(100)
   model                  String?         @db.VarChar(100)
@@ -83,9 +87,10 @@ model Vehicle {
   url                    String          @db.VarChar(255)
   created                DateTime
   edited                 DateTime
+  cache_date             DateTime        @default(now())
 }
 
-model Species {
+model species {
   id               Int             @id @default(autoincrement())
   name             String          @db.VarChar(100)
   classification   String?         @db.VarChar(50)
@@ -96,16 +101,17 @@ model Species {
   hair_colors      String?         @db.VarChar(100)
   skin_colors      String?         @db.VarChar(100)
   language         String?         @db.VarChar(100)
-  homeworld        Planet?         @relation(fields: [homeworldId], references: [id])
+  homeworld        planets?         @relation(fields: [homeworldId], references: [id])
   homeworldId      Int?
   films            FilmSpecies[]
   people           PersonSpecies[]
   url              String          @db.VarChar(255)
   created          DateTime
   edited           DateTime
+  cache_date       DateTime        @default(now())
 }
 
-model Planet {
+model planets {
   id              Int          @id @default(autoincrement())
   name            String       @db.VarChar(100)
   diameter        String?      @db.VarChar(20)
@@ -116,12 +122,13 @@ model Planet {
   climate         String?      @db.VarChar(50)
   terrain         String?      @db.VarChar(100)
   surface_water   String?      @db.VarChar(50)
-  residents       Person[]
+  residents       people[]
   films           FilmPlanet[]
   url             String       @db.VarChar(255)
   created         DateTime
   edited          DateTime
-  Species         Species[]
+  Species         species[]
+  cache_date      DateTime     @default(now())
 }
 
 model PersonFilm {
@@ -129,8 +136,8 @@ model PersonFilm {
   personId Int
   filmId   Int
 
-  person Person @relation(fields: [personId], references: [id])
-  film   Film   @relation(fields: [filmId], references: [id])
+  person people @relation(fields: [personId], references: [id])
+  film   films   @relation(fields: [filmId], references: [id])
 }
 
 model PersonSpecies {
@@ -138,8 +145,8 @@ model PersonSpecies {
   personId  Int
   speciesId Int
 
-  person  Person  @relation(fields: [personId], references: [id])
-  species Species @relation(fields: [speciesId], references: [id])
+  person  people  @relation(fields: [personId], references: [id])
+  species species @relation(fields: [speciesId], references: [id])
 }
 
 model PersonVehicle {
@@ -147,8 +154,8 @@ model PersonVehicle {
   personId  Int
   vehicleId Int
 
-  person  Person  @relation(fields: [personId], references: [id])
-  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  person  people @relation(fields: [personId], references: [id])
+  vehicle vehicles @relation(fields: [vehicleId], references: [id])
 }
 
 model PersonStarship {
@@ -156,8 +163,8 @@ model PersonStarship {
   personId   Int
   starshipId Int
 
-  person   Person   @relation(fields: [personId], references: [id])
-  starship Starship @relation(fields: [starshipId], references: [id])
+  person   people   @relation(fields: [personId], references: [id])
+  starship starships @relation(fields: [starshipId], references: [id])
 }
 
 model FilmSpecies {
@@ -165,8 +172,8 @@ model FilmSpecies {
   filmId    Int
   speciesId Int
 
-  film    Film    @relation(fields: [filmId], references: [id])
-  species Species @relation(fields: [speciesId], references: [id])
+  film    films    @relation(fields: [filmId], references: [id])
+  species species @relation(fields: [speciesId], references: [id])
 }
 
 model FilmStarship {
@@ -174,8 +181,8 @@ model FilmStarship {
   filmId     Int
   starshipId Int
 
-  film     Film     @relation(fields: [filmId], references: [id])
-  starship Starship @relation(fields: [starshipId], references: [id])
+  film     films     @relation(fields: [filmId], references: [id])
+  starship starships @relation(fields: [starshipId], references: [id])
 }
 
 model FilmVehicle {
@@ -183,8 +190,8 @@ model FilmVehicle {
   filmId    Int
   vehicleId Int
 
-  film    Film    @relation(fields: [filmId], references: [id])
-  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  film    films    @relation(fields: [filmId], references: [id])
+  vehicle vehicles @relation(fields: [vehicleId], references: [id])
 }
 
 model FilmPlanet {
@@ -192,6 +199,6 @@ model FilmPlanet {
   filmId   Int
   planetId Int
 
-  film   Film   @relation(fields: [filmId], references: [id])
-  planet Planet @relation(fields: [planetId], references: [id])
+  film   films   @relation(fields: [filmId], references: [id])
+  planet planets @relation(fields: [planetId], references: [id])
 }
