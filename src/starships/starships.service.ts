@@ -1,16 +1,17 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
 import { StarshipResponseDto, StarshipsResponseDto } from './dto/startships-response.dto';
+import { PinoLogger } from 'nestjs-pino';
 
 @Injectable()
 export class StarshipsService {
-    constructor(private readonly swapiUtils: SwapiUtils) {}
+    constructor(private readonly swapiUtils: SwapiUtils, private readonly logger: PinoLogger) {}
 
     async getAllStarships(filters: Record<string, any>): Promise<StarshipsResponseDto> {
         try {
             return await this.swapiUtils.fetchAllData('starships', filters) as StarshipsResponseDto;
         } catch (error) {
-            console.error(`getAllStarships: ${error}`);
+            this.logger.error(`getAllStarships: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }
@@ -22,7 +23,7 @@ export class StarshipsService {
             if (error instanceof NotFoundException) {
                 throw error;
             }
-            console.error(`getStarshipById: ${error}`);
+            this.logger.error(`getStarshipById: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }

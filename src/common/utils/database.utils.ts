@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { PinoLogger } from 'nestjs-pino';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 
@@ -7,20 +8,20 @@ import { PrismaService } from 'src/prisma/prisma.service';
     exports: [DatabaseUtils]
 })
 export class DatabaseUtils {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService, private readonly logger: PinoLogger) {}
 
     async findOne(modelName: string, where: object) {
         try {
             const model = this.prisma[modelName];
 
             if (!model) {
-                console.error(`findOne: Model ${modelName} does not exist`);
+                this.logger.error(`findOne: Model ${modelName} does not exist`);
                 throw new Error(`findOne: Model ${modelName} does not exist`);
             }
 
             return await model.findUnique({ where });
         } catch (error) {
-            console.error(`findOne: Model ${modelName} does not exist`);
+            this.logger.error(`findOne: Model ${modelName} does not exist`);
             throw new Error(`findOne: Error querying ${modelName} model. Message: ${error}`);
         }
     }
@@ -30,12 +31,12 @@ export class DatabaseUtils {
             const model = this.prisma[modelName];
 
             if (!model) {
-                console.error(`saveMany: Model ${modelName} does not exist`);
+                this.logger.error(`saveMany: Model ${modelName} does not exist`);
                 throw new Error(`saveMany: Model ${modelName} does not exist`);
             }
 
             if (!records || !Array.isArray(records) || !records.length) {
-                console.error(`saveMany: Model ${modelName} does not exist`);
+                this.logger.error(`saveMany: Model ${modelName} does not exist`);
                 throw new Error(`saveMany: Model ${modelName} does not exist`);
             }
 
@@ -43,7 +44,7 @@ export class DatabaseUtils {
                 data: records
             });
         } catch (error) {
-            console.error(`saveMany: Model ${modelName} does not exist`);
+            this.logger.error(`saveMany: Model ${modelName} does not exist`);
             throw new Error(`saveMany: Error querying ${modelName} model. Message: ${error}`);
         }
     }
@@ -53,12 +54,12 @@ export class DatabaseUtils {
             const model = this.prisma[modelName];
 
             if (!model) {
-                console.error(`saveMany: Model ${modelName} does not exist`);
+                this.logger.error(`saveMany: Model ${modelName} does not exist`);
                 throw new Error(`saveMany: Model ${modelName} does not exist`);
             }
 
             if (!record || typeof record !== 'object' || !Object.keys(record).length) {
-                console.error(`saveMany: Model ${modelName} does not exist`);
+                this.logger.error(`saveMany: Model ${modelName} does not exist`);
                 throw new Error(`saveMany: Model ${modelName} does not exist`);
             }
 
@@ -66,7 +67,7 @@ export class DatabaseUtils {
                 data: record
             });
         } catch (error) {
-            console.error(`saveMany: Model ${modelName} does not exist`);
+            this.logger.error(`saveMany: Model ${modelName} does not exist`);
             throw new Error(`saveMany: Error querying ${modelName} model. Message: ${error}`);
         }
     }
@@ -76,13 +77,13 @@ export class DatabaseUtils {
             const model = this.prisma[modelName];
 
             if (!model) {
-              console.error(`findMany: Model ${modelName} does not exist`);
+              this.logger.error(`findMany: Model ${modelName} does not exist`);
               throw new Error(`findMany: Model ${modelName} does not exist`);
             }
 
             return await model.findMany({ where });
           } catch (error) {
-            console.error(`findMany: Model ${modelName} does not exist`);
+            this.logger.error(`findMany: Model ${modelName} does not exist`);
             throw new Error(`findMany: Error querying ${modelName} model. Message: ${error}`);
           }
     }

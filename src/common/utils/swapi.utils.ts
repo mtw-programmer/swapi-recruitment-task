@@ -1,6 +1,7 @@
 import { CacheUtils } from './cache.utils';
 import { Injectable, NotFoundException, Module, BadRequestException } from '@nestjs/common';
 import { toFetch } from './const/toFetch.const';
+import { PinoLogger } from 'nestjs-pino';
 import axios from 'axios';
 
 @Injectable()
@@ -10,7 +11,7 @@ import axios from 'axios';
     exports: [SwapiUtils],
   })
 export class SwapiUtils {
-    constructor(private readonly cacheUtils: CacheUtils) {}
+    constructor(private readonly cacheUtils: CacheUtils, private readonly logger: PinoLogger) {}
 
     private readonly swapiBaseUrl = 'https://swapi.dev/api/';
     private readonly swapiTimeout = 60000;
@@ -19,7 +20,7 @@ export class SwapiUtils {
     async fetchAllData(subpage: string, filters: Record<string, any>): Promise<{ data: any[] }> {
         try {
             if (!Array.isArray(toFetch[subpage]) || !toFetch[subpage].length) {
-                console.error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
+                this.logger.error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
                 throw new Error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
             }
 
@@ -32,11 +33,11 @@ export class SwapiUtils {
             const res = await axios.get(url, { timeout: this.swapiTimeout });
 
             if (!res || !res.data) {
-                console.error(`SWAPI Utils: Could not fetch ${url}`);
+                this.logger.error(`SWAPI Utils: Could not fetch ${url}`);
                 throw new Error(`SWAPI Utils: Could not fetch ${url}`);
             }
 
-            console.log(`SWAPI Utils: Successfully fetched ${url}`);
+            this.logger.info(`SWAPI Utils: Successfully fetched ${url}`);
 
             let data = res.data.results;
             const page = parseInt(filters.page);
@@ -96,7 +97,7 @@ export class SwapiUtils {
 
             return { data: processedData };
         } catch (error) {
-            console.error(`SWAPI Utils: ${error}`);
+            this.logger.error(`SWAPI Utils: ${error}`);
             throw new Error(`SWAPI Utils: ${error}`);
         }
     }
@@ -119,7 +120,7 @@ export class SwapiUtils {
                 throw new NotFoundException('Could not find the object with the given ID!');
             }
 
-            console.log(`SWAPI Utils: Successfully fetched ${url}`);
+            this.logger.info(`SWAPI Utils: Successfully fetched ${url}`);
 
             const subpageType = subpage.split('/')[0];
 
@@ -142,14 +143,14 @@ export class SwapiUtils {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response?.status === 404) {
-                    console.error(`SWAPI Utils: Could not find the url ${this.swapiBaseUrl + subpage}`);
+                    this.logger.error(`SWAPI Utils: Could not find the url ${this.swapiBaseUrl + subpage}`);
                     throw new NotFoundException('Could not find the object with the given ID!');
                 }
 
-                console.error(`SWAPI Utils: Axios Error Response -`, error.response?.data);
+                this.logger.error(`SWAPI Utils: Axios Error Response -`, error.response?.data);
                 return { error: error.response?.status || 500, msg: 'An unexpected error occurred.' };
             } else {
-                console.error(`SWAPI Utils: ${error}`);
+                this.logger.error(`SWAPI Utils: ${error}`);
                 throw new Error(`SWAPI Utils: ${error}`);
             }
         }
@@ -158,19 +159,19 @@ export class SwapiUtils {
     private async fetchMultipleUrls(urls: string[]): Promise<any[]> {
         try {
             if (!urls.length) {
-                console.error('SWAPI Utils: No URLs provided');
+                this.logger.error('SWAPI Utils: No URLs provided');
                 return [];
             }
 
             if (!Array.isArray(urls)) {
-                console.error('SWAPI Utils: Provided URLs are not an array');
+                this.logger.error('SWAPI Utils: Provided URLs are not an array');
                 throw new Error('SWAPI Utils: Invalid input, expected an array of URLs');
             }            
 
             const validUrls = urls.filter((url: string) => url.startsWith(this.swapiBaseUrl));
             if (validUrls.length !== urls.length) {
                 const invalidUrls = urls.filter((url: string) => !url.startsWith(this.swapiBaseUrl));
-                console.error(`SWAPI Utils: Invalid URLs - ${invalidUrls}`);
+                this.logger.error(`SWAPI Utils: Invalid URLs - ${invalidUrls}`);
                 throw new Error(`SWAPI Utils: Invalid URLs - ${invalidUrls}`);
             }
 
@@ -180,14 +181,14 @@ export class SwapiUtils {
                         const res = await axios.get(url, { timeout: this.swapiTimeout });
 
                         if (!res || !res.data) {
-                            console.error(`SWAPI Utils: Could not fetch ${url}`);
+                            this.logger.error(`SWAPI Utils: Could not fetch ${url}`);
                             throw new Error(`SWAPI Utils: Could not fetch ${url}`);
                         }
 
-                        console.log(`SWAPI Utils: Successfully fetched ${url}`);
+                        this.logger.info(`SWAPI Utils: Successfully fetched ${url}`);
                         return res.data;
                     } catch (error) {
-                        console.error(`SWAPI Utils: Error fetching ${url} - ${error}`);
+                        this.logger.error(`SWAPI Utils: Error fetching ${url} - ${error}`);
                         throw new Error(`SWAPI Utils: Error fetching ${url} - ${error}`);
                     }
                 })
@@ -195,7 +196,7 @@ export class SwapiUtils {
 
             return fetchedData;
         } catch (error) {
-            console.error(`SWAPI Utils: ${error}`);
+            this.logger.error(`SWAPI Utils: ${error}`);
             throw new Error(`SWAPI Utils: ${error}`);
         }
     }

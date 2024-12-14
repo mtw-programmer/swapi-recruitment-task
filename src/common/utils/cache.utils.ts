@@ -1,5 +1,6 @@
 import { InternalServerErrorException, Module } from '@nestjs/common';
 import { DatabaseUtils } from './database.utils';
+import { PinoLogger } from 'nestjs-pino';
 
 @Module({
     imports: [DatabaseUtils],
@@ -7,7 +8,7 @@ import { DatabaseUtils } from './database.utils';
     exports: [CacheUtils]
 })
 export class CacheUtils {
-    constructor(private readonly dbUtils: DatabaseUtils) {}
+    constructor(private readonly dbUtils: DatabaseUtils, private readonly logger: PinoLogger) {}
 
     async checkRecordsInCache(model: string, filters?: Record<string, any>) {
         try {
@@ -20,14 +21,14 @@ export class CacheUtils {
 
             response = await this.dbUtils.findMany(model);
             if (!response || !Array.isArray(response) || !response.length) {
-                console.log(`checkRecordsInCache: Records for ${model} model not found in cache`);
+                this.logger.info(`checkRecordsInCache: Records for ${model} model not found in cache`);
                 return false;
             }
 
-            console.log(`checkRecordsInCache: Found records for ${model} model in cache`);
+            this.logger.info(`checkRecordsInCache: Found records for ${model} model in cache`);
             return response;
         } catch (error) {
-            console.error(`checkRecordsInCache: ${error}`);
+            this.logger.error(`checkRecordsInCache: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again.');
         }
     }
@@ -38,20 +39,20 @@ export class CacheUtils {
             let where = { cache_date: { lte: new Date() } };
 
             if (!filters || typeof filters !== 'object' || !Object.keys(filters).length) {
-                console.error(`checkRecordInCache: No filters given for ${model} model`);
+                this.logger.error(`checkRecordInCache: No filters given for ${model} model`);
                 throw new Error(`checkRecordInCache: No filters given for ${model} model`);
             }
 
             response = await this.dbUtils.findOne(model, { ...where, ...filters });
             if (!response) {
-                console.log(`checkRecordInCache: Records for ${model} model not found in cache`);
+                this.logger.info(`checkRecordInCache: Records for ${model} model not found in cache`);
                 return false;
             }
 
-            console.log(`checkRecordInCache: Found records for ${model} model in cache`);
+            this.logger.info(`checkRecordInCache: Found records for ${model} model in cache`);
             return response;
         } catch (error) {
-            console.error(`checkRecordInCache: ${error}`);
+            this.logger.error(`checkRecordInCache: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again.');
         }
     }
@@ -59,9 +60,9 @@ export class CacheUtils {
     async saveRecordsInCache(model: string, records: object[]) {
         try {
             await this.dbUtils.saveMany(model, { ...records });
-            console.log(`saveRecordsInCache: Saved ${model} models in cache`);
+            this.logger.info(`saveRecordsInCache: Saved ${model} models in cache`);
         } catch (error) {
-            console.error(`saveRecordsInCache: ${error}`);
+            this.logger.error(`saveRecordsInCache: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again.');
         }
     }
@@ -69,9 +70,9 @@ export class CacheUtils {
     async saveRecordInCache(model: string, records: object[]) {
         try {
             await this.dbUtils.saveOne(model, { ...records });
-            console.log(`saveRecordsInCache: Saved ${model} models in cache`);
+            this.logger.info(`saveRecordsInCache: Saved ${model} models in cache`);
         } catch (error) {
-            console.error(`saveRecordsInCache: ${error}`);
+            this.logger.error(`saveRecordsInCache: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again.');
         }
     }
