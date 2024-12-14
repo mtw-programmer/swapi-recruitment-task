@@ -27,6 +27,30 @@ export class CacheUtils {
             console.log(`checkRecordsInCache: Found records for ${model} model in cache`);
             return response;
         } catch (error) {
+            console.error(`checkRecordsInCache: ${error}`);
+            throw new InternalServerErrorException('Something went wrong! Please, try again.');
+        }
+    }
+
+    async checkRecordInCache(model: string, filters: Record<string, any>) {
+        try {
+            let response;
+            let where = { cache_date: { lte: new Date() } };
+
+            if (!filters || typeof filters !== 'object' || !Object.keys(filters).length) {
+                console.error(`checkRecordInCache: No filters given for ${model} model`);
+                throw new Error(`checkRecordInCache: No filters given for ${model} model`);
+            }
+
+            response = await this.dbUtils.findOne(model, { ...where, ...filters });
+            if (!response) {
+                console.log(`checkRecordInCache: Records for ${model} model not found in cache`);
+                return false;
+            }
+
+            console.log(`checkRecordInCache: Found records for ${model} model in cache`);
+            return response;
+        } catch (error) {
             console.error(`checkRecordInCache: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again.');
         }
@@ -34,7 +58,17 @@ export class CacheUtils {
 
     async saveRecordsInCache(model: string, records: object[]) {
         try {
-            await this.dbUtils.saveMany(model, records);
+            await this.dbUtils.saveMany(model, { ...records });
+            console.log(`saveRecordsInCache: Saved ${model} models in cache`);
+        } catch (error) {
+            console.error(`saveRecordsInCache: ${error}`);
+            throw new InternalServerErrorException('Something went wrong! Please, try again.');
+        }
+    }
+
+    async saveRecordInCache(model: string, records: object[]) {
+        try {
+            await this.dbUtils.saveOne(model, { ...records });
             console.log(`saveRecordsInCache: Saved ${model} models in cache`);
         } catch (error) {
             console.error(`saveRecordsInCache: ${error}`);

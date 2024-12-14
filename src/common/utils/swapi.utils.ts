@@ -1,5 +1,5 @@
 import { CacheUtils } from './cache.utils';
-import { Injectable, NotFoundException, Module } from '@nestjs/common';
+import { Injectable, NotFoundException, Module, BadRequestException } from '@nestjs/common';
 import { toFetch } from './const/toFetch.const';
 import axios from 'axios';
 
@@ -103,6 +103,15 @@ export class SwapiUtils {
     
     async fetchOne(subpage: string, deep: boolean): Promise<any> {
         try {
+            if (!subpage.split('/')[1]) {
+                throw new BadRequestException('Wrong subpage given!');
+            }
+
+            const cachedValue = await this.cacheUtils.checkRecordInCache(subpage.split('/')[0], { url: this.swapiBaseUrl + subpage });
+
+            if (cachedValue)
+                return { data: cachedValue };
+
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
 
@@ -113,6 +122,8 @@ export class SwapiUtils {
             console.log(`SWAPI Utils: Successfully fetched ${url}`);
 
             const subpageType = subpage.split('/')[0];
+
+            await this.cacheUtils.saveRecordInCache(subpage.split('/')[0], res.data);
 
             if (!Array.isArray(toFetch[subpageType]) || !toFetch[subpageType]?.length || !deep) return { data: res.data };
 

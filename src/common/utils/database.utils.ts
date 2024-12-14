@@ -47,6 +47,29 @@ export class DatabaseUtils {
             throw new Error(`saveMany: Error querying ${modelName} model. Message: ${error}`);
         }
     }
+    
+    async saveOne(modelName: string, record: object) {
+        try {
+            const model = this.prisma[modelName];
+
+            if (!model) {
+                console.error(`saveMany: Model ${modelName} does not exist`);
+                throw new Error(`saveMany: Model ${modelName} does not exist`);
+            }
+
+            if (!record || typeof record !== 'object' || !Object.keys(record).length) {
+                console.error(`saveMany: Model ${modelName} does not exist`);
+                throw new Error(`saveMany: Model ${modelName} does not exist`);
+            }
+
+            return await model.create({
+                data: record
+            });
+        } catch (error) {
+            console.error(`saveMany: Model ${modelName} does not exist`);
+            throw new Error(`saveMany: Error querying ${modelName} model. Message: ${error}`);
+        }
+    }
 
     async findMany(modelName: string, where?: object) {
         try {
