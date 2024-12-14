@@ -25,7 +25,30 @@ export class DatabaseUtils {
         }
     }
 
-    async findMany(modelName: string, where?: string) {
+    async saveMany(modelName: string, records: object[]) {
+        try {
+            const model = this.prisma[modelName];
+
+            if (!model) {
+                console.error(`saveMany: Model ${modelName} does not exist`);
+                throw new Error(`saveMany: Model ${modelName} does not exist`);
+            }
+
+            if (!records || !Array.isArray(records) || !records.length) {
+                console.error(`saveMany: Model ${modelName} does not exist`);
+                throw new Error(`saveMany: Model ${modelName} does not exist`);
+            }
+
+            return await model.createMany({
+                data: records
+            });
+        } catch (error) {
+            console.error(`saveMany: Model ${modelName} does not exist`);
+            throw new Error(`saveMany: Error querying ${modelName} model. Message: ${error}`);
+        }
+    }
+
+    async findMany(modelName: string, where?: object) {
         try {
             const model = this.prisma[modelName];
 

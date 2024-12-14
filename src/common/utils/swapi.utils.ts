@@ -1,5 +1,6 @@
 import { CacheUtils } from './cache.utils';
 import { Injectable, NotFoundException, Module } from '@nestjs/common';
+import { toFetch } from './const/toFetch.const';
 import axios from 'axios';
 
 @Injectable()
@@ -14,25 +15,17 @@ export class SwapiUtils {
     private readonly swapiBaseUrl = 'https://swapi.dev/api/';
     private readonly swapiTimeout = 60000;
     private readonly limitPerPage = 5;
-    private readonly toFetch = {
-        'films': ['characters', 'planets', 'species', 'starships', 'vehicles'],
-        'people': ['homeworld', 'films', 'species', 'vehicles', 'starships'],
-        'planets': ['residents', 'films'],
-        'species': ['homeworld', 'people', 'films'],
-        'starships': ['films', 'pilots'],
-        'vehicles': ['films', 'pilots']
-    };
 
     async fetchAllData(subpage: string, filters: Record<string, any>): Promise<{ data: any[] }> {
         try {
-            if (!Array.isArray(this.toFetch[subpage]) || !this.toFetch[subpage].length) {
+            if (!Array.isArray(toFetch[subpage]) || !toFetch[subpage].length) {
                 console.error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
                 throw new Error(`SWAPI Utils: Given subpage ${subpage} is outside range`);
             }
 
-            const cachedValue = await this.cacheUtils.checkRecordInCache(subpage);
+            const cachedValue = await this.cacheUtils.checkRecordsInCache(subpage);
 
-            if (cachedValue)
+            if (cachedValue && !filters.deep)
                 return { data: cachedValue };
 
             const url = this.swapiBaseUrl + subpage;
@@ -47,6 +40,10 @@ export class SwapiUtils {
 
             let data = res.data.results;
             const page = parseInt(filters.page);
+
+            const dataToCache = data.map((record) => ({ ...record, page: (filters.page || 1) }));
+
+            await this.cacheUtils.saveRecordsInCache(subpage, dataToCache);
 
             if (filters && typeof filters === 'object') {
                 for (const [key, property] of Object.entries(filters)) {
@@ -77,13 +74,13 @@ export class SwapiUtils {
                 data = data.slice(startIndex, endIndex);
             }
 
-            if (!this.toFetch[subpage] || !this.toFetch[subpage]?.length || !filters.deep) return { data };
+            if (!toFetch[subpage] || !toFetch[subpage]?.length || !filters.deep) return { data };
 
             let processedData = await Promise.all(
                 data.map(async (obj) => {
                     const updatedObj = { ...obj };
 
-                    for (const property of this.toFetch[subpage]) {
+                    for (const property of toFetch[subpage]) {
                         if (property == 'deep') continue;
                         else if (typeof obj[property] === 'string' && obj[property].startsWith(this.swapiBaseUrl))
                             updatedObj[property] = (await this.fetchMultipleUrls([obj[property]]))[0];
@@ -117,11 +114,11 @@ export class SwapiUtils {
 
             const subpageType = subpage.split('/')[0];
 
-            if (!Array.isArray(this.toFetch[subpageType]) || !this.toFetch[subpageType]?.length || !deep) return { data: res.data };
+            if (!Array.isArray(toFetch[subpageType]) || !toFetch[subpageType]?.length || !deep) return { data: res.data };
 
             const updatedObj = { ...res.data };
 
-            for (const property of this.toFetch[subpageType]) {
+            for (const property of toFetch[subpageType]) {
                 if (typeof res.data[property] === 'string')
                     updatedObj[property] = (await this.fetchMultipleUrls([res.data[property]]))[0];
                 else if (Array.isArray(res.data[property]))
