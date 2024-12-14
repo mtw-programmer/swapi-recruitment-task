@@ -12,20 +12,21 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=mysql://root:root@mysql:3306/nestjs_db
+      - DATABASE_URL=postgresql://root:root@postgres:5432/nestjs_db
     depends_on:
-      - mysql
+      - postgres
 
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-db
+  postgres:
+    image: postgres:13
+    container_name: postgres-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: nestjs_db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: nestjs_db
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  mysql-data:
+  postgres-data:
