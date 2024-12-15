@@ -1,6 +1,5 @@
 import { FilmDto } from 'src/common/dto/film.dto';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
-import { CacheUtils } from 'src/common/utils/cache.utils';
 import { Injectable } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
 import { PairResults } from './interfaces/PairResults';
@@ -86,6 +85,19 @@ export class OpeningCrawlService {
                 }
             }
 
+            const uniqueWordPairs = Object.entries(uniquePars).map(([pair, count]) => [pair, count]) as [string, number][];
+
+            if (!Object.keys(nameCount).length) {
+                return {
+                    uniqueWordPairs,
+                    mostFrequentNames: {
+                        name: [],
+                        count: 0
+                    },
+                };
+            }
+
+
             let maxCount = Math.max(...Object.values(nameCount));
             const names = Object.keys(nameCount).filter(name => nameCount[name] === maxCount);
             let mostFrequentNames = {
@@ -94,7 +106,7 @@ export class OpeningCrawlService {
             };
 
             return {
-                uniqueWordPairs: Object.entries(uniquePars).map(([pair, count]) => [pair, count]) as [string, number][],
+                uniqueWordPairs,
                 mostFrequentNames,
             };
         } catch (error) {
