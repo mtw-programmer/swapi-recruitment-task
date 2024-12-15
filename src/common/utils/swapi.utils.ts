@@ -109,6 +109,7 @@ export class SwapiUtils {
     async fetchOne(subpage: string, deep: boolean): Promise<any> {
         try {
             if (!subpage.split('/')[1]) {
+                this.logger.error(`fetchOne: Wrong subpage ${subpage} given`);
                 throw new BadRequestException('Wrong subpage given!');
             }
 
@@ -163,7 +164,7 @@ export class SwapiUtils {
     private async fetchMultipleUrls(urls: string[]): Promise<any[]> {
         try {
             if (!urls.length) {
-                this.logger.error('SWAPI Utils: No URLs provided');
+                this.logger.warn('SWAPI Utils: No URLs provided');
                 return [];
             }
 
