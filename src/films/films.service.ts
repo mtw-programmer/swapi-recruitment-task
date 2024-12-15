@@ -1,6 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
-import { CacheUtils } from 'src/common/utils/cache.utils';
 import { FilmResponseDto, FilmsResponseDto } from './dto/films-response.dto';
 import { PinoLogger } from 'nestjs-pino';
 
