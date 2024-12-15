@@ -13,7 +13,9 @@ export class CacheUtils {
     async checkRecordsInCache(model: string, filters?: Record<string, any>) {
         try {
             let response;
-            let where = { cache_date: { lte: new Date() } };
+            const twentyFourHoursAgo = new Date();
+            twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+            const where = { cache_date: { gte: twentyFourHoursAgo }, individual: false };
 
             if (filters && typeof filters === 'object' && Object.keys(filters).length) {
                 response = await this.dbUtils.findMany(model, { ...where, ...filters });
@@ -36,7 +38,9 @@ export class CacheUtils {
     async checkRecordInCache(model: string, filters: Record<string, any>) {
         try {
             let response;
-            let where = { cache_date: { lte: new Date() } };
+            const twentyFourHoursAgo = new Date();
+            twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+            const where = { cache_date: { gte: twentyFourHoursAgo } };
 
             if (!filters || typeof filters !== 'object' || !Object.keys(filters).length) {
                 this.logger.error(`checkRecordInCache: No filters given for ${model} model`);
@@ -59,7 +63,12 @@ export class CacheUtils {
 
     async saveRecordsInCache(model: string, records: object[]) {
         try {
-            await this.dbUtils.saveMany(model, { ...records });
+            if (!records || !Array.isArray(records) || !records.length) {
+                this.logger.error(`saveRecordsInCache: ${records} is not a valid array`);
+                throw new Error(`saveRecordsInCache: ${records} is not a valid array`);
+            }
+            const updatedRecords = records.map((record) => ({ ...record, individual: false }))
+            await this.dbUtils.saveMany(model, updatedRecords);
             this.logger.info(`saveRecordsInCache: Saved ${model} models in cache`);
         } catch (error) {
             this.logger.error(`saveRecordsInCache: ${error}`);
@@ -67,9 +76,9 @@ export class CacheUtils {
         }
     }
 
-    async saveRecordInCache(model: string, records: object[]) {
+    async saveRecordInCache(model: string, record: object[]) {
         try {
-            await this.dbUtils.saveOne(model, { ...records });
+            await this.dbUtils.saveOne(model, { ...record });
             this.logger.info(`saveRecordsInCache: Saved ${model} models in cache`);
         } catch (error) {
             this.logger.error(`saveRecordsInCache: ${error}`);

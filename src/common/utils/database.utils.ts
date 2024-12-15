@@ -40,8 +40,9 @@ export class DatabaseUtils {
                 throw new Error(`saveMany: Model ${modelName} does not exist`);
             }
 
-            return await model.createMany({
-                data: records
+            await this.prisma.$transaction(async () => {
+                await model.deleteMany({});
+                return await model.createMany({ data: records });
             });
         } catch (error) {
             this.logger.error(`saveMany: Model ${modelName} does not exist`);
@@ -64,7 +65,7 @@ export class DatabaseUtils {
             }
 
             return await model.create({
-                data: record
+                data: { ...record, individual: true}
             });
         } catch (error) {
             this.logger.error(`saveMany: Model ${modelName} does not exist`);
@@ -81,7 +82,7 @@ export class DatabaseUtils {
               throw new Error(`findMany: Model ${modelName} does not exist`);
             }
 
-            return await model.findMany({ where });
+            return await model.findMany({ where: { ...where, individual: false } });
           } catch (error) {
             this.logger.error(`findMany: Model ${modelName} does not exist`);
             throw new Error(`findMany: Error querying ${modelName} model. Message: ${error}`);

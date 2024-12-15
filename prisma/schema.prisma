@@ -23,12 +23,12 @@ model people {
   species     String[]
   vehicles    String[]
   starships   String[]
-  url         String?           @db.VarChar(255)
+  url         String           @db.VarChar(255) @unique
   created     DateTime?
   edited      DateTime?
-  page        Int
   cache_date  DateTime          @default(now())
-  @@index([url])
+  individual      Boolean
+  @@index([url, individual])
 }
 
 
@@ -45,12 +45,12 @@ model films {
   vehicles      String[]
   characters    String[]
   planets       String[]
-  url           String?         @db.VarChar(255)
+  url           String         @db.VarChar(255) @unique
   created       DateTime?
   edited        DateTime?
-  page        Int
   cache_date    DateTime       @default(now())
-  @@index([url])
+  individual      Boolean
+  @@index([url, individual])
 }
 
 model starships {
@@ -70,9 +70,10 @@ model starships {
   consumables            String?          @db.VarChar(100)
   films                  String[]
   pilots                 String[]
-  page        Int
+  url         String                      @db.VarChar(255) @unique
   cache_date             DateTime         @default(now())
-  @@index([name])
+  individual      Boolean
+  @@index([url, individual])
 }
 
 model vehicles {
@@ -90,12 +91,12 @@ model vehicles {
   consumables            String?         @db.VarChar(100)
   films                  String[]
   pilots                 String[]
-  url                    String          @db.VarChar(255)
+  url                    String          @db.VarChar(255) @unique
   created                DateTime?
   edited                 DateTime?
-  page        Int
   cache_date             DateTime        @default(now())
-  @@index([url])
+  individual      Boolean
+  @@index([url, individual])
 }
 
 model species {
@@ -113,12 +114,12 @@ model species {
   homeworldId      Int?
   films            String[]
   people           String[]
-  url              String          @db.VarChar(255)
+  url              String          @db.VarChar(255) @unique
   created          DateTime?
   edited           DateTime?
-  page        Int
   cache_date       DateTime        @default(now())
-  @@index([url])
+  individual      Boolean
+  @@index([url, individual])
 }
 
 model planets {
@@ -134,11 +135,11 @@ model planets {
   surface_water   String?      @db.VarChar(50)
   residents       String[]
   films           String[]
-  url             String       @db.VarChar(255)
+  url             String       @db.VarChar(255) @unique
   created         DateTime?
   edited          DateTime?
   species         String[]
-  page        Int
   cache_date      DateTime     @default(now())
-  @@index([url])
+  individual      Boolean
+  @@index([url, individual])
 }

@@ -2,6 +2,7 @@ import { CacheUtils } from './cache.utils';
 import { Injectable, NotFoundException, Module, BadRequestException } from '@nestjs/common';
 import { toFetch } from './const/toFetch.const';
 import { PinoLogger } from 'nestjs-pino';
+import { omit } from 'lodash';
 import axios from 'axios';
 
 @Injectable()
@@ -26,13 +27,16 @@ export class SwapiUtils {
 
             const cachedValue = await this.cacheUtils.checkRecordsInCache(subpage);
 
-            if (cachedValue && !filters.deep)
-                return { data: cachedValue };
+            if (cachedValue && !filters.deep) {
+                const omitValue = cachedValue.map((record) => omit(record, ['id', 'cache_date', 'individual']));
+                return { data: omitValue };
+            }
 
             const url = this.swapiBaseUrl + subpage;
+
             const res = await axios.get(url, { timeout: this.swapiTimeout });
 
-            if (!res || !res.data) {
+            if (!res || !res.data || !res.data.results) {
                 this.logger.error(`SWAPI Utils: Could not fetch ${url}`);
                 throw new Error(`SWAPI Utils: Could not fetch ${url}`);
             }
@@ -42,7 +46,7 @@ export class SwapiUtils {
             let data = res.data.results;
             const page = parseInt(filters.page);
 
-            const dataToCache = data.map((record) => ({ ...record, page: (filters.page || 1) }));
+            const dataToCache = data.map((record) => ({ ...record }));
 
             await this.cacheUtils.saveRecordsInCache(subpage, dataToCache);
 
@@ -108,10 +112,10 @@ export class SwapiUtils {
                 throw new BadRequestException('Wrong subpage given!');
             }
 
-            const cachedValue = await this.cacheUtils.checkRecordInCache(subpage.split('/')[0], { url: this.swapiBaseUrl + subpage });
+            const cachedValue = await this.cacheUtils.checkRecordInCache(subpage.split('/')[0], { url: `${this.swapiBaseUrl}${subpage}/` });
 
             if (cachedValue)
-                return { data: cachedValue };
+                return { data: omit(cachedValue, ['id', 'cache_date', 'individual']) };
 
             const url = this.swapiBaseUrl + subpage;
             const res = await axios.get(url, { timeout: this.swapiTimeout });
