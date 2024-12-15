@@ -14,10 +14,9 @@ export class PeopleController {
     @PeopleDocsQueries()
     @PeopleDocsResponses()
     async getAllPeople(
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
     ):Promise<PeopleResponseDto> {
-        const result = await this.peopleService.getAllPeople(!!deep, filters);
+        const result = await this.peopleService.getAllPeople(filters);
         return result;
     }
     

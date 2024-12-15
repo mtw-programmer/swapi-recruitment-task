@@ -14,10 +14,9 @@ export class PlanetsController {
     @PlanetDocsQueries()
     @PlanetsDocsResponses()
     async getAllPlanets(
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
     ):Promise<PlanetsResponseDto> {
-        const result = await this.planetsService.getAllPlanets(!!deep, filters);
+        const result = await this.planetsService.getAllPlanets(filters);
         return result;
     }
     

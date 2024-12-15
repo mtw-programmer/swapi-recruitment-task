@@ -1,22 +1,24 @@
 import { FilmDto } from 'src/common/dto/film.dto';
 import { SwapiUtils } from 'src/common/utils/swapi.utils';
+import { CacheUtils } from 'src/common/utils/cache.utils';
 import { Injectable } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
 import { PairResults } from './interfaces/PairResults';
+import { PinoLogger } from 'nestjs-pino';
 
 @Injectable()
 export class OpeningCrawlService {
-    constructor(private readonly swapiUtils: SwapiUtils) {}
+    constructor(private readonly swapiUtils: SwapiUtils, private readonly logger: PinoLogger) {}
 
     private words = [] as string[];
     private names = [] as string[];
 
     private async fetchOpeningCrawls() {
         try {
-            const films = await this.swapiUtils.fetchAllData('films', [], {});
+            const films = await this.swapiUtils.fetchAllData('films', {});
 
             if (!films.data || !films.data.length) {
-                console.log('fetchOpeningCrawls: Could not fetch any films data');
+                this.logger.info('fetchOpeningCrawls: Could not fetch any films data');
                 return;
             }
 
@@ -35,7 +37,7 @@ export class OpeningCrawlService {
 
             this.words = words;
         } catch (error) {
-            console.error(`fetchOpeningCrawls: ${error}`);
+            this.logger.error(`fetchOpeningCrawls: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }
@@ -44,7 +46,7 @@ export class OpeningCrawlService {
         try {
             if (!this.words || !this.words.length) return;
 
-            const people = await this.swapiUtils.fetchAllData('people', [], {});
+            const people = await this.swapiUtils.fetchAllData('people', {});
 
             if (!people.data || !people.data.length) return;
 
@@ -58,7 +60,7 @@ export class OpeningCrawlService {
 
             this.names = names;
         } catch (error) {
-            console.error(`fetchAllNames: ${error}`);
+            this.logger.error(`fetchAllNames: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }
@@ -96,7 +98,7 @@ export class OpeningCrawlService {
                 mostFrequentNames,
             };
         } catch (error) {
-            console.error(`pairResults: ${error}`);
+            this.logger.error(`pairResults: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }
@@ -107,7 +109,7 @@ export class OpeningCrawlService {
             await this.fetchAllNames();
             return await this.pairResults();
         } catch (error) {
-            console.error(`getWordsData: ${error}`);
+            this.logger.error(`getWordsData: ${error}`);
             throw new InternalServerErrorException('Something went wrong! Please, try again later.');
         }
     }

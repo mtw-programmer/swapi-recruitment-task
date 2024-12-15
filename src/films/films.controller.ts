@@ -14,10 +14,9 @@ export class FilmsController {
     @FilmDocsQueries()
     @FilmsDocsResponses()
     async getAllFilms(
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
     ):Promise<FilmsResponseDto> {
-        const result = await this.filmsService.getAllFilms(!!deep, filters);
+        const result = await this.filmsService.getAllFilms(filters);
         return result;
     }
     

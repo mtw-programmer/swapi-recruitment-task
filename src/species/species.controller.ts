@@ -14,10 +14,9 @@ export class SpeciesController {
     @SpeciesDocsQueries()
     @SpeciesDocsResponses()
     async getAllSpecies(
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
     ):Promise<SpeciesResponseDto> {
-        const result = await this.speciesService.getAllSpecies(!!deep, filters);
+        const result = await this.speciesService.getAllSpecies(filters);
         return result;
     }
     

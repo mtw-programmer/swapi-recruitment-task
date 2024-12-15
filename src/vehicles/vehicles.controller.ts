@@ -14,10 +14,9 @@ export class VehiclesController {
     @VehiclesDocsQueries()
     @VehiclesDocsResponses()
     async getAllVehicles(
-        @Query('deep', new ParseBoolPipe({ optional: true })) deep: boolean = false,
         @Query() filters: Record<string, any>
     ):Promise<VehiclesResponseDto> {
-        const result = await this.vehiclesService.getAllVehicles(!!deep, filters);
+        const result = await this.vehiclesService.getAllVehicles(filters);
         return result;
     }
     

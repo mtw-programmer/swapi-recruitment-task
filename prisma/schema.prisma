@@ -1,54 +1,61 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
-model Person {
-  id          Int              @id @default(autoincrement())
-  name        String           @db.VarChar(100)
-  birth_year  String?          @db.VarChar(10)
-  eye_color   String?          @db.VarChar(30)
-  gender      String?          @db.VarChar(10)
-  hair_color  String?          @db.VarChar(30)
-  height      String?          @db.VarChar(10)
-  mass        String?          @db.VarChar(10)
-  skin_color  String?          @db.VarChar(30)
-  homeworld   Planet?          @relation(fields: [homeworldId], references: [id])
-  homeworldId Int?
-  films       PersonFilm[]
-  species     PersonSpecies[]
-  vehicles    PersonVehicle[]
-  starships   PersonStarship[]
-  url         String?          @db.VarChar(255)
-  created     DateTime
-  edited      DateTime
+model people {
+  id          Int               @id @default(autoincrement())
+  name        String?           @db.VarChar(100)
+  birth_year  String?           @db.VarChar(10)
+  eye_color   String?           @db.VarChar(30)
+  gender      String?           @db.VarChar(10)
+  hair_color  String?           @db.VarChar(30)
+  height      String?           @db.VarChar(10)
+  mass        String?           @db.VarChar(10)
+  skin_color  String?           @db.VarChar(30)
+  homeworld   String?          
+  films       String[]
+  species     String[]
+  vehicles    String[]
+  starships   String[]
+  url         String           @db.VarChar(255) @unique
+  created     DateTime?
+  edited      DateTime?
+  cache_date  DateTime          @default(now())
+  individual      Boolean
+  @@index([url, individual])
 }
 
-model Film {
+
+model films {
   id            Int            @id @default(autoincrement())
-  title         String         @db.VarChar(100)
-  episode_id    Int
+  title         String?        @db.VarChar(100)
+  episode_id    Int?
   opening_crawl String?        @db.Text
   director      String?        @db.VarChar(100)
   producer      String?        @db.VarChar(100)
-  release_date  DateTime
-  species       FilmSpecies[]
-  starships     FilmStarship[]
-  vehicles      FilmVehicle[]
-  characters    PersonFilm[]
-  planets       FilmPlanet[]
-  url           String         @db.VarChar(255)
-  created       DateTime
-  edited        DateTime
+  release_date  DateTime?
+  species       String[]
+  starships     String[]
+  vehicles      String[]
+  characters    String[]
+  planets       String[]
+  url           String         @db.VarChar(255) @unique
+  created       DateTime?
+  edited        DateTime?
+  cache_date    DateTime       @default(now())
+  individual      Boolean
+  @@index([url, individual])
 }
 
-model Starship {
+model starships {
   id                     Int              @id @default(autoincrement())
-  name                   String           @db.VarChar(100)
+  name                   String?          @db.VarChar(100)
   model                  String?          @db.VarChar(100)
   starship_class         String?          @db.VarChar(100)
   manufacturer           String?          @db.VarChar(100)
@@ -61,13 +68,17 @@ model Starship {
   MGLT                   String?          @db.VarChar(20)
   cargo_capacity         String?          @db.VarChar(20)
   consumables            String?          @db.VarChar(100)
-  films                  FilmStarship[]
-  pilots                 PersonStarship[]
+  films                  String[]
+  pilots                 String[]
+  url         String                      @db.VarChar(255) @unique
+  cache_date             DateTime         @default(now())
+  individual      Boolean
+  @@index([url, individual])
 }
 
-model Vehicle {
+model vehicles {
   id                     Int             @id @default(autoincrement())
-  name                   String          @db.VarChar(100)
+  name                   String?          @db.VarChar(100)
   model                  String?         @db.VarChar(100)
   vehicle_class          String?         @db.VarChar(50)
   manufacturer           String?         @db.VarChar(100)
@@ -78,16 +89,19 @@ model Vehicle {
   max_atmosphering_speed String?         @db.VarChar(20)
   cargo_capacity         String?         @db.VarChar(20)
   consumables            String?         @db.VarChar(100)
-  films                  FilmVehicle[]
-  pilots                 PersonVehicle[]
-  url                    String          @db.VarChar(255)
-  created                DateTime
-  edited                 DateTime
+  films                  String[]
+  pilots                 String[]
+  url                    String          @db.VarChar(255) @unique
+  created                DateTime?
+  edited                 DateTime?
+  cache_date             DateTime        @default(now())
+  individual      Boolean
+  @@index([url, individual])
 }
 
-model Species {
+model species {
   id               Int             @id @default(autoincrement())
-  name             String          @db.VarChar(100)
+  name             String?          @db.VarChar(100)
   classification   String?         @db.VarChar(50)
   designation      String?         @db.VarChar(50)
   average_height   String?         @db.VarChar(20)
@@ -96,18 +110,21 @@ model Species {
   hair_colors      String?         @db.VarChar(100)
   skin_colors      String?         @db.VarChar(100)
   language         String?         @db.VarChar(100)
-  homeworld        Planet?         @relation(fields: [homeworldId], references: [id])
+  homeworld        String?
   homeworldId      Int?
-  films            FilmSpecies[]
-  people           PersonSpecies[]
-  url              String          @db.VarChar(255)
-  created          DateTime
-  edited           DateTime
+  films            String[]
+  people           String[]
+  url              String          @db.VarChar(255) @unique
+  created          DateTime?
+  edited           DateTime?
+  cache_date       DateTime        @default(now())
+  individual      Boolean
+  @@index([url, individual])
 }
 
-model Planet {
+model planets {
   id              Int          @id @default(autoincrement())
-  name            String       @db.VarChar(100)
+  name            String?       @db.VarChar(100)
   diameter        String?      @db.VarChar(20)
   rotation_period String?      @db.VarChar(20)
   orbital_period  String?      @db.VarChar(20)
@@ -116,82 +133,13 @@ model Planet {
   climate         String?      @db.VarChar(50)
   terrain         String?      @db.VarChar(100)
   surface_water   String?      @db.VarChar(50)
-  residents       Person[]
-  films           FilmPlanet[]
-  url             String       @db.VarChar(255)
-  created         DateTime
-  edited          DateTime
-  Species         Species[]
-}
-
-model PersonFilm {
-  id       Int @id @default(autoincrement())
-  personId Int
-  filmId   Int
-
-  person Person @relation(fields: [personId], references: [id])
-  film   Film   @relation(fields: [filmId], references: [id])
-}
-
-model PersonSpecies {
-  id        Int @id @default(autoincrement())
-  personId  Int
-  speciesId Int
-
-  person  Person  @relation(fields: [personId], references: [id])
-  species Species @relation(fields: [speciesId], references: [id])
-}
-
-model PersonVehicle {
-  id        Int @id @default(autoincrement())
-  personId  Int
-  vehicleId Int
-
-  person  Person  @relation(fields: [personId], references: [id])
-  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
-}
-
-model PersonStarship {
-  id         Int @id @default(autoincrement())
-  personId   Int
-  starshipId Int
-
-  person   Person   @relation(fields: [personId], references: [id])
-  starship Starship @relation(fields: [starshipId], references: [id])
-}
-
-model FilmSpecies {
-  id        Int @id @default(autoincrement())
-  filmId    Int
-  speciesId Int
-
-  film    Film    @relation(fields: [filmId], references: [id])
-  species Species @relation(fields: [speciesId], references: [id])
-}
-
-model FilmStarship {
-  id         Int @id @default(autoincrement())
-  filmId     Int
-  starshipId Int
-
-  film     Film     @relation(fields: [filmId], references: [id])
-  starship Starship @relation(fields: [starshipId], references: [id])
-}
-
-model FilmVehicle {
-  id        Int @id @default(autoincrement())
-  filmId    Int
-  vehicleId Int
-
-  film    Film    @relation(fields: [filmId], references: [id])
-  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
-}
-
-model FilmPlanet {
-  id       Int @id @default(autoincrement())
-  filmId   Int
-  planetId Int
-
-  film   Film   @relation(fields: [filmId], references: [id])
-  planet Planet @relation(fields: [planetId], references: [id])
+  residents       String[]
+  films           String[]
+  url             String       @db.VarChar(255) @unique
+  created         DateTime?
+  edited          DateTime?
+  species         String[]
+  cache_date      DateTime     @default(now())
+  individual      Boolean
+  @@index([url, individual])
 }
