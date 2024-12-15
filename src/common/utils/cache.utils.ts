@@ -21,7 +21,7 @@ export class CacheUtils {
                 response = await this.dbUtils.findMany(model, { ...where, ...filters });
             }
 
-            response = await this.dbUtils.findMany(model);
+            response = await this.dbUtils.findMany(model, where);
             if (!response || !Array.isArray(response) || !response.length) {
                 this.logger.info(`checkRecordsInCache: Records for ${model} model not found in cache`);
                 return false;

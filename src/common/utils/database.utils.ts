@@ -44,13 +44,15 @@ export class DatabaseUtils {
                 await model.deleteMany({});
                 return await model.createMany({ data: records });
             });
+
+            this.logger.info(`saveMany: Cleared ${modelName} db from old records`);
         } catch (error) {
             this.logger.error(`saveMany: Model ${modelName} does not exist`);
             throw new Error(`saveMany: Error querying ${modelName} model. Message: ${error}`);
         }
     }
     
-    async saveOne(modelName: string, record: object) {
+    async saveOne(modelName: string, record: any) {
         try {
             const model = this.prisma[modelName];
 
@@ -64,8 +66,20 @@ export class DatabaseUtils {
                 throw new Error(`saveMany: Model ${modelName} does not exist`);
             }
 
-            return await model.create({
-                data: { ...record, individual: true}
+            const twentyFourHoursAgo = new Date();
+            twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+            const where = { cache_date: { lt: twentyFourHoursAgo }, individual: true, url: record.url };
+
+            await this.prisma.$transaction(async () => {
+                await model.deleteMany({ where });
+            });
+
+            this.logger.info(`saveOne: Cleared ${modelName} db from old records with url = ${record.url}`);
+
+            await this.prisma.$transaction(async () => {
+                return await model.create({
+                    data: { ...record, individual: true}
+                });
             });
         } catch (error) {
             this.logger.error(`saveMany: Model ${modelName} does not exist`);
