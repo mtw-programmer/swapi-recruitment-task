@@ -8,8 +8,6 @@ import { PinoLogger } from 'nestjs-pino';
 export class FilmsService {
     constructor(private readonly swapiUtils: SwapiUtils, private readonly logger: PinoLogger) {}
 
-    private readonly toFetch = ['characters', 'planets', 'species', 'starships', 'vehicles'];
-
     async getAllFilms(filters: Record<string, any>): Promise<FilmsResponseDto> {
         try {
             return await this.swapiUtils.fetchAllData('films', filters) as FilmsResponseDto;
